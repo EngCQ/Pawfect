@@ -1,18 +1,18 @@
 import "package:flutter/material.dart";
-import "package:flutter_assignment/pet_adopters/header.dart";
+import "package:flutter_assignment/pet_adopters/template.dart";
 
 void main() {
-  runApp(const myApp());
+  runApp(const MyApp());
 }
 
-class myApp extends StatelessWidget {
-  const myApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Header(),
+      home: Template(),
     );
   }
 }
