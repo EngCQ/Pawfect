@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment/pet_adopters/favourite.dart';
 
 //Setting the default color for the application
 class AppColor {
@@ -50,7 +51,12 @@ class Template extends StatelessWidget {
             Transform.scale(
               scale: 1,
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Favourite()));
+                },
                 icon: Image.asset("lib/pet_adopters/images/favourite.png"),
               ),
             ),
