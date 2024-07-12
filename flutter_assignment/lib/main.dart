@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
-import "package:flutter_assignment/pet_adopters/favourite.dart";
-import "package:flutter_assignment/pet_adopters/PA_home.dart";
+import "package:flutter_assignment/pet_adopters/screens/adopters_favourite.dart";
+import "package:flutter_assignment/pet_adopters/screens/adopters_home.dart";
 
 void main() {
   runApp(const MyApp());

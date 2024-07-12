@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_assignment/pet_adopters/favourite.dart';
+import 'package:flutter_assignment/pet_adopters/screens/adopters_favourite.dart';
 
 //Setting the default color for the application
 class AppColor {
