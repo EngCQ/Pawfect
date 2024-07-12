@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment/pet_adopters/screens/adopters_favourite.dart';
-
-//Setting the default color for the application
-class AppColor {
-  static Color primaryColor = const Color(0xff2DC378);
-}
+import 'package:flutter_assignment/pet_adopters/design/app_color.dart';
 
 class Template extends StatelessWidget {
   const Template({super.key});
