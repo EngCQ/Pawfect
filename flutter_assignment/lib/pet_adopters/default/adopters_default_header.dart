@@ -1,4 +1,3 @@
-// default_header.dart
 import 'package:flutter/material.dart';
 
 class DefaultHeader extends StatelessWidget implements PreferredSizeWidget {
@@ -11,7 +10,8 @@ class DefaultHeader extends StatelessWidget implements PreferredSizeWidget {
       title: const Text(
         "PawFect",
         style: TextStyle(
-          color: Color.fromARGB(149, 100, 100, 157),
+          color: Color.fromARGB(255, 255, 255, 255),
+          fontWeight: FontWeight.bold,
           fontSize: 30.0,
           fontFamily: AutofillHints.birthday,
         ),

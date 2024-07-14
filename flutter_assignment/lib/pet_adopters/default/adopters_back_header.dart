@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class BackHeader extends StatelessWidget {
+class BackHeader extends StatelessWidget implements PreferredSizeWidget {
   const BackHeader({super.key});
 
   @override
@@ -9,4 +9,7 @@ class BackHeader extends StatelessWidget {
       backgroundColor: Colors.blue,
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

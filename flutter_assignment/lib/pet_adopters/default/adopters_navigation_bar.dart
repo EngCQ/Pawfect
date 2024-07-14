@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import "package:flutter_assignment/pet_adopters/design/app_color.dart";
+import "package:flutter_assignment/pet_adopters/default/adopters_app_color.dart";
 import "package:flutter_assignment/pet_adopters/screens/adopters_favourite.dart";
 
-class AdopterNavigationBar extends StatelessWidget {
-  const AdopterNavigationBar({super.key});
+class AdoptersNavigationBar extends StatelessWidget {
+  const AdoptersNavigationBar({super.key});
 
   @override
   Widget build(BuildContext context) {
