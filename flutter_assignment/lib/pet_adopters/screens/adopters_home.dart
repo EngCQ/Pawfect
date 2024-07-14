@@ -14,7 +14,7 @@ class AdoptersHome extends StatelessWidget {
   ];
 
   final List<String> postImage = [
-    'lib/pet_adopters/images/bell.png',
+    'lib/pet_adopters/images/pets.jpeg',
     'lib/pet_adopters/images/pets.jpeg',
     'lib/pet_adopters/images/pets.jpeg',
   ];
@@ -23,6 +23,12 @@ class AdoptersHome extends StatelessWidget {
     'Teddy',
     'Jakie',
     'Joy',
+  ];
+
+  final List<String> postType = [
+    'Missing Pet',
+    'Pet Adoption',
+    'Pet Adoption',
   ];
 
   @override
@@ -35,6 +41,8 @@ class AdoptersHome extends StatelessWidget {
             return HomePost(
               postName: postName[index],
               postImage: postImage[index],
+              postPetName: postPetName[index],
+              postType: postType[index],
             );
           }),
       bottomNavigationBar: const AdoptersNavigationBar(),

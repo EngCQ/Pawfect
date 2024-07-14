@@ -5,8 +5,15 @@ import 'package:flutter_assignment/pet_adopters/default/adopters_design.dart';
 class HomePost extends StatelessWidget {
   final String postName;
   final String postImage;
+  final String postPetName;
+  final String postType;
 
-  const HomePost({super.key, required this.postName, required this.postImage});
+  const HomePost(
+      {super.key,
+      required this.postName,
+      required this.postImage,
+      required this.postPetName,
+      required this.postType});
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +56,31 @@ class HomePost extends StatelessWidget {
               bottom: 0,
               right: 0,
               child: Container(
-                width: 380,
+                width: Design.getScreenWidth(context) - 10,
                 padding: const EdgeInsets.all(10),
                 color: Colors.blue.withOpacity(0.5),
-                child: const Text(
-                  'Second Container',
-                  style: TextStyle(fontSize: 20, color: Colors.white),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: Text(
+                        postPetName,
+                        style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Text(
+                      postType,
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
               ),
             ),
