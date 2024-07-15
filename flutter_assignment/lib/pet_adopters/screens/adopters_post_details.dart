@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_assignment/pet_adopters/default/adopters_back_header.dart';
-import 'package:flutter_assignment/pet_adopters/default/adopters_navigation_bar.dart';
 import 'package:flutter_assignment/pet_adopters/default/adopters_design.dart';
 
 class AdoptersPostDetails extends StatelessWidget {
@@ -33,85 +31,77 @@ class AdoptersPostDetails extends StatelessWidget {
             height: 360,
             color: Colors.blue,
             child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 10.0,
-                  bottom: 20,
-                  top: 10,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Username',
+              padding: const EdgeInsets.only(
+                left: 10.0,
+                bottom: 20,
+                top: 10,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Username',
+                    style: TextStyle(
+                      fontSize: Design.descriptionTitleSize,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: Design.descriptionDetailTopPadding,
+                      bottom: 10,
+                    ),
+                    child: Text(
+                      'bla bla',
                       style: TextStyle(
-                        fontSize: Design.descriptionTitleSize,
+                        fontSize: Design.descriptionDetailSize,
                         color: Colors.white,
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: Design.descriptionDetailTopPadding, bottom: 10),
-                      child: Text(
-                        'bla bla',
-                        style: TextStyle(
-                          fontSize: Design.descriptionDetailSize,
-                          color: Colors.white,
-                        ),
-                      ),
+                  ),
+                  Text(
+                    "Pet's Name",
+                    style: TextStyle(
+                      fontSize: Design.descriptionTitleSize,
+                      color: Colors.white,
                     ),
-                    Text(
-                      "Pet's Name",
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: Design.descriptionDetailTopPadding,
+                      bottom: 10,
+                    ),
+                    child: Text(
+                      'bla bla',
                       style: TextStyle(
-                          fontSize: Design.descriptionTitleSize,
-                          color: Colors.white),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: Design.descriptionDetailTopPadding, bottom: 10),
-                      child: Text(
-                        'bla bla',
-                        style: TextStyle(
-                          fontSize: Design.descriptionDetailSize,
-                          color: Colors.white,
-                        ),
+                        fontSize: Design.descriptionDetailSize,
+                        color: Colors.white,
                       ),
                     ),
-                    Text(
-                      "Description",
+                  ),
+                  Text(
+                    "Description",
+                    style: TextStyle(
+                      fontSize: Design.descriptionTitleSize,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: Design.descriptionDetailTopPadding,
+                      bottom: 10,
+                    ),
+                    child: Text(
+                      'bla bla',
                       style: TextStyle(
-                          fontSize: Design.descriptionTitleSize,
-                          color: Colors.white),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: Design.descriptionDetailTopPadding, bottom: 10),
-                      child: Text(
-                        'bla bla',
-                        style: TextStyle(
-                          fontSize: Design.descriptionDetailSize,
-                          color: Colors.white,
-                        ),
+                        fontSize: Design.descriptionDetailSize,
+                        color: Colors.white,
                       ),
                     ),
-                    Text(
-                      "Contact Details",
-                      style: TextStyle(
-                          fontSize: Design.descriptionTitleSize,
-                          color: Colors.white),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: Design.descriptionDetailTopPadding, bottom: 10),
-                      child: Text(
-                        'bla bla',
-                        style: TextStyle(
-                          fontSize: Design.descriptionDetailSize,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                )),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -123,7 +113,12 @@ class AdoptersPostDetails extends StatelessWidget {
             color: Colors.yellow[800],
             icon: const Icon(Icons.star),
             onPressed: () {
-              print("clicked");
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Added to Favourite"),
+                  duration: Duration(seconds: 2),
+                ),
+              );
             },
           ),
           SizedBox(
@@ -140,15 +135,15 @@ class AdoptersPostDetails extends StatelessWidget {
               child: const Text(
                 "Book",
                 style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          )
+          ),
         ],
       ),
-      // bottomNavigationBar: AdoptersNavigationBar(),
     );
   }
 }

@@ -5,8 +5,10 @@ class BackHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.blue,
+    return AppBar(
+      backgroundColor: Colors.cyan,
+      automaticallyImplyLeading: true,
+      title: const Text(""),
     );
   }
 

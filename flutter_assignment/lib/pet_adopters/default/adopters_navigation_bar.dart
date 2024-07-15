@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import "package:flutter_assignment/pet_adopters/default/adopters_app_color.dart";
-import "package:flutter_assignment/pet_adopters/screens/adopters_favourite.dart";
+import 'package:flutter_assignment/pet_adopters/default/adopters_app_color.dart';
+import 'package:flutter_assignment/pet_adopters/screens/adopters_appointment.dart';
+import 'package:flutter_assignment/pet_adopters/screens/adopters_favourite.dart';
+import 'package:flutter_assignment/pet_adopters/screens/adopters_chat_list.dart';
 
 class AdoptersNavigationBar extends StatelessWidget {
   const AdoptersNavigationBar({super.key});
@@ -15,7 +17,11 @@ class AdoptersNavigationBar extends StatelessWidget {
           Transform.scale(
             scale: 0.75,
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                if (ModalRoute.of(context)?.settings.name != '/home') {
+                  Navigator.pushNamed(context, '/home');
+                }
+              },
               icon: Image.asset("lib/pet_adopters/images/home.png"),
             ),
           ),
@@ -23,8 +29,9 @@ class AdoptersNavigationBar extends StatelessWidget {
             scale: 1,
             child: IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Favourite()));
+                if (ModalRoute.of(context)?.settings.name != '/favourites') {
+                  Navigator.pushNamed(context, '/favourites');
+                }
               },
               icon: Image.asset("lib/pet_adopters/images/favourite.png"),
             ),
@@ -32,14 +39,25 @@ class AdoptersNavigationBar extends StatelessWidget {
           Transform.scale(
             scale: 1,
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                if (ModalRoute.of(context)?.settings.name != '/appointments') {
+                  Navigator.pushNamed(context, '/appointments');
+                }
+              },
               icon: Image.asset("lib/pet_adopters/images/calender.png"),
             ),
           ),
           Transform.scale(
             scale: 0.8,
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AdoptersChatList(),
+                  ),
+                );
+              },
               icon: Image.asset("lib/pet_adopters/images/chat.png"),
             ),
           ),

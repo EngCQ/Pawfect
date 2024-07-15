@@ -33,11 +33,9 @@ class HomePost extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const AdoptersPostDetails()),
-                );
+                if (ModalRoute.of(context)?.settings.name != '/post_details') {
+                  Navigator.pushNamed(context, '/post_details');
+                }
               },
             ),
             Positioned(

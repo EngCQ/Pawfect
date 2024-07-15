@@ -7,6 +7,7 @@ class DefaultHeader extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.cyan,
+      automaticallyImplyLeading: false,
       title: const Text(
         "PawFect",
         style: TextStyle(

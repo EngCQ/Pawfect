@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AdoptersFilter extends StatelessWidget {
-  const AdoptersFilter({super.key});
-
+class AdoptersChatList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
