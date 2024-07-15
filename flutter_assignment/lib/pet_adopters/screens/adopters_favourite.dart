@@ -38,15 +38,20 @@ class AdoptersFavourite extends StatelessWidget {
       appBar: const DefaultHeader(),
       body: favouritePostName.isEmpty
           ? Center(
-              child: Text("No Favourite Post",
-                  style: TextStyle(fontSize: Design.emptyPageSize)))
+              child: Text(
+                "No Favourite Post",
+                style: TextStyle(fontSize: Design.emptyPageSize),
+              ),
+            )
           : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Text(
                     'Your Favourite Post Here',
                     style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.left,
                   ),
                 ),
                 Expanded(

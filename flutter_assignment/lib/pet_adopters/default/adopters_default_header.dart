@@ -26,7 +26,9 @@ class DefaultHeader extends StatelessWidget implements PreferredSizeWidget {
         ),
         IconButton(
           onPressed: () {
-            print("notification clicked");
+            if (ModalRoute.of(context)?.settings.name != '/notification') {
+              Navigator.pushNamed(context, '/notification');
+            }
           },
           icon: Image.asset("lib/pet_adopters/images/bell.png"),
         ),

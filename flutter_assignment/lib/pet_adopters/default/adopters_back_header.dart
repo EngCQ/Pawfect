@@ -8,7 +8,6 @@ class BackHeader extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.cyan,
       automaticallyImplyLeading: true,
-      title: const Text(""),
     );
   }
 

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment/pet_adopters/default/adopters_default_header.dart';
+import 'package:flutter_assignment/pet_adopters/default/adopters_design.dart';
 import 'package:flutter_assignment/pet_adopters/default/adopters_navigation_bar.dart';
 
 class AdoptersAppointment extends StatelessWidget {
   AdoptersAppointment({super.key});
 
-  // List of all post details
+  // List of all appointment details
   final List<String> appointmentName = [
     'post 1',
     'post 2',
@@ -34,35 +35,44 @@ class AdoptersAppointment extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const DefaultHeader(),
-      body: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Your Booking',
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: appointmentName.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Image.asset(appointmenImage[index]),
-                  title: Text(appointmentName[index]),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Pet Name: ${appointmentPetName[index]}'),
-                      Text('Post Type: ${appointmentType[index]}'),
-                    ],
+      body: appointmentName.isEmpty
+          ? Center(
+              child: Text(
+                "No Appointment",
+                style: TextStyle(fontSize: Design.emptyPageSize),
+              ),
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'Your Booking',
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.left,
                   ),
-                );
-              },
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: appointmentName.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: Image.asset(appointmenImage[index]),
+                        title: Text(appointmentName[index]),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Pet Name: ${appointmentPetName[index]}'),
+                            Text('Post Type: ${appointmentType[index]}'),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
       bottomNavigationBar: const AdoptersNavigationBar(),
     );
   }
