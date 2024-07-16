@@ -6,6 +6,7 @@ import "package:flutter_assignment/pet_adopters/screens/adopters_filter.dart";
 import "package:flutter_assignment/pet_adopters/screens/adopters_home.dart";
 import "package:flutter_assignment/pet_adopters/screens/adopters_notification.dart";
 import "package:flutter_assignment/pet_adopters/screens/adopters_post_details.dart";
+import "package:flutter_assignment/pet_adopters/screens/adopters_profile.dart";
 import "package:flutter_assignment/pet_adopters/screens/getting_testing_data.dart";
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -32,9 +33,10 @@ class MyApp extends StatelessWidget {
         '/favourites': (context) => AdoptersFavourite(),
         '/post_details': (context) => const AdoptersPostDetails(),
         '/appointments': (context) => AdoptersAppointment(),
+        '/chat': (context) => const AddingTestingData(),
+        '/profile': (context) => AdoptersProfile(),
         '/filter': (context) => const AdoptersFilter(),
         '/notification': (context) => AdoptersNotification(),
-        '/chat': (context) => const AddingTestingData(),
       },
     );
   }

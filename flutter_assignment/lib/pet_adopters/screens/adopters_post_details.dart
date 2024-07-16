@@ -131,7 +131,13 @@ class AdoptersPostDetails extends StatelessWidget {
                 ),
                 backgroundColor: Colors.blue,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AdoptersPostDetails()),
+                );
+              },
               child: const Text(
                 "Book",
                 style: TextStyle(

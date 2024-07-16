@@ -45,7 +45,7 @@ class _AddingTestingDataState extends State<AddingTestingData> {
                       collRef.add({
                         'userName': controllerName.text,
                         'petName': controllerPetName.text,
-                        'desccription': controllerDescription.text,
+                        'description': controllerDescription.text,
                         'type': controllerStatus.text,
                       });
                     },
