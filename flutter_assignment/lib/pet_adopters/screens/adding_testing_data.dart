@@ -10,7 +10,9 @@ class AddingTestingData extends StatefulWidget {
 }
 
 class _AddingTestingDataState extends State<AddingTestingData> {
+  final TextEditingController controllerPetName = TextEditingController();
   final TextEditingController controllerName = TextEditingController();
+  final TextEditingController controllerDescription = TextEditingController();
   final TextEditingController controllerStatus = TextEditingController();
 
   @override
@@ -25,16 +27,26 @@ class _AddingTestingDataState extends State<AddingTestingData> {
                   decoration: const InputDecoration(),
                 ),
                 TextFormField(
+                  controller: controllerPetName,
+                  decoration: const InputDecoration(),
+                ),
+                TextFormField(
+                  controller: controllerDescription,
+                  decoration: const InputDecoration(),
+                ),
+                TextFormField(
                   controller: controllerStatus,
                   decoration: const InputDecoration(),
                 ),
                 ElevatedButton(
                     onPressed: () {
-                      CollectionReference collRef =
-                          FirebaseFirestore.instance.collection("adopter_post");
+                      CollectionReference collRef = FirebaseFirestore.instance
+                          .collection("adopters_post");
                       collRef.add({
-                        'Name': controllerName.text,
-                        'Status': controllerStatus.text,
+                        'userName': controllerName.text,
+                        'petName': controllerPetName.text,
+                        'desccription': controllerDescription.text,
+                        'type': controllerStatus.text,
                       });
                     },
                     child: const Text('Submit'))

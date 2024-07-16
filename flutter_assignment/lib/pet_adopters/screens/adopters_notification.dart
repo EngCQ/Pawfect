@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment/pet_adopters/default/adopters_back_header.dart';
-import 'package:flutter_assignment/pet_adopters/default/adopters_default_header.dart';
 
 class AdoptersNotification extends StatelessWidget {
   AdoptersNotification({super.key});
@@ -19,19 +18,40 @@ class AdoptersNotification extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const BackHeader(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
               'Notification',
               style: TextStyle(fontSize: 20),
               textAlign: TextAlign.left,
             ),
-          ),
-          Container(),
-        ],
+            const SizedBox(height: 16.0),
+            for (var i = 0; i < notificationTitle.length; i++)
+              Container(
+                margin: const EdgeInsets.only(bottom: 8.0),
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black12,
+                      offset: Offset(0, 1),
+                      blurRadius: 4.0,
+                    ),
+                  ],
+                ),
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(notificationTitle[i]),
+                  subtitle: Text(notificationMessage[i]),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

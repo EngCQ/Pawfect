@@ -51,12 +51,9 @@ class AdoptersNavigationBar extends StatelessWidget {
             scale: 0.8,
             child: IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AdoptersChatList(),
-                  ),
-                );
+                if (ModalRoute.of(context)?.settings.name != '/chat') {
+                  Navigator.pushNamed(context, '/chat');
+                }
               },
               icon: Image.asset("lib/pet_adopters/images/chat.png"),
             ),
