@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_assignment/pet_adopters/default/adopters_back_header.dart';
-import 'package:flutter_assignment/pet_adopters/default/adopters_design.dart';
+import 'default/adopters_back_header.dart';
+import 'default/adopters_design.dart';
 
 class AdoptersPostDetails extends StatelessWidget {
   const AdoptersPostDetails({super.key});
@@ -18,7 +18,7 @@ class AdoptersPostDetails extends StatelessWidget {
                 Container(
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('lib/pet_adopters/images/pets.jpeg'),
+                      image: AssetImage('lib/images/pets.jpeg'),
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -131,13 +131,7 @@ class AdoptersPostDetails extends StatelessWidget {
                 ),
                 backgroundColor: Colors.blue,
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const AdoptersPostDetails()),
-                );
-              },
+              onPressed: () {},
               child: const Text(
                 "Book",
                 style: TextStyle(

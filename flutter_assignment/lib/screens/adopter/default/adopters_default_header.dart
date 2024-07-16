@@ -22,7 +22,7 @@ class DefaultHeader extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () {
             print("filter clicked");
           },
-          icon: Image.asset("lib/pet_adopters/images/filter.png"),
+          icon: Image.asset("lib/images/filter.png"),
         ),
         IconButton(
           onPressed: () {
@@ -30,7 +30,7 @@ class DefaultHeader extends StatelessWidget implements PreferredSizeWidget {
               Navigator.pushNamed(context, '/notification');
             }
           },
-          icon: Image.asset("lib/pet_adopters/images/bell.png"),
+          icon: Image.asset("lib/images/bell.png"),
         ),
       ],
     );

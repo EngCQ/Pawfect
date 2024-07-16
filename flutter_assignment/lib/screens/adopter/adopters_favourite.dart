@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_assignment/pet_adopters/components/home_post.dart';
-import 'package:flutter_assignment/pet_adopters/default/adopters_default_header.dart';
-import 'package:flutter_assignment/pet_adopters/default/adopters_design.dart';
-import 'package:flutter_assignment/pet_adopters/default/adopters_navigation_bar.dart';
+import 'components/home_post.dart';
+import 'default/adopters_default_header.dart';
+import 'default/adopters_design.dart';
+import 'default/adopters_navigation_bar.dart';
 
 class AdoptersFavourite extends StatelessWidget {
   AdoptersFavourite({super.key});
@@ -15,9 +15,9 @@ class AdoptersFavourite extends StatelessWidget {
   ];
 
   final List<String> favouritePostImage = [
-    'lib/pet_adopters/images/pets.jpeg',
-    'lib/pet_adopters/images/pets.jpeg',
-    'lib/pet_adopters/images/pets.jpeg',
+    'lib/images/pets.jpeg',
+    'lib/images/pets.jpeg',
+    'lib/images/pets.jpeg',
   ];
 
   final List<String> favouritePostPetName = [

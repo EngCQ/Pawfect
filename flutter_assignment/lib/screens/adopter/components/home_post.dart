@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_assignment/pet_adopters/screens/adopters_post_details.dart';
-import 'package:flutter_assignment/pet_adopters/default/adopters_design.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_post_details.dart';
+import 'package:flutter_assignment/screens/adopter/default/adopters_design.dart';
 
 class HomePost extends StatelessWidget {
   final String postName;

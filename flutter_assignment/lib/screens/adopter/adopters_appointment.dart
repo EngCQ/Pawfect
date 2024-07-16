@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_assignment/pet_adopters/default/adopters_default_header.dart';
-import 'package:flutter_assignment/pet_adopters/default/adopters_design.dart';
-import 'package:flutter_assignment/pet_adopters/default/adopters_navigation_bar.dart';
+import 'default/adopters_default_header.dart';
+import 'default/adopters_design.dart';
+import 'default/adopters_navigation_bar.dart';
 
 class AdoptersAppointment extends StatelessWidget {
   AdoptersAppointment({super.key});
@@ -14,9 +14,9 @@ class AdoptersAppointment extends StatelessWidget {
   ];
 
   final List<String> appointmenImage = [
-    'lib/pet_adopters/images/pets.jpeg',
-    'lib/pet_adopters/images/pets.jpeg',
-    'lib/pet_adopters/images/pets.jpeg',
+    'lib/images/pets.jpeg',
+    'lib/images/pets.jpeg',
+    'lib/images/pets.jpeg',
   ];
 
   final List<String> appointmentPetName = [

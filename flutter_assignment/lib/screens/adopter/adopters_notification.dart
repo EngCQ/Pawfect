@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_assignment/pet_adopters/default/adopters_back_header.dart';
+import 'package:flutter_assignment/screens/adopter/default/adopters_back_header.dart';
 
 class AdoptersNotification extends StatelessWidget {
   AdoptersNotification({super.key});

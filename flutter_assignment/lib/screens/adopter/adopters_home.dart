@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_assignment/pet_adopters/components/home_post.dart';
-import 'package:flutter_assignment/pet_adopters/default/adopters_default_header.dart';
-import 'package:flutter_assignment/pet_adopters/default/adopters_navigation_bar.dart';
+import 'components/home_post.dart';
+import 'default/adopters_default_header.dart';
+import 'default/adopters_navigation_bar.dart';
+import 'package:flutter_assignment/routes.dart';
 
 class AdoptersHome extends StatelessWidget {
   AdoptersHome({super.key});
 
   final List<String> postImage = [
-    'lib/pet_adopters/images/pets.jpeg',
-    'lib/pet_adopters/images/pets.jpeg',
-    'lib/pet_adopters/images/pets.jpeg',
+    'lib/images/pets.jpeg',
+    'lib/images/pets.jpeg',
+    'lib/images/pets.jpeg',
   ];
 
   @override
