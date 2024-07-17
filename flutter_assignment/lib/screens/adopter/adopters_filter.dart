@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment/routes.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_app_color.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_back_header.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_design.dart';
@@ -34,7 +35,7 @@ class _AdoptersFilterState extends State<AdoptersFilter> {
               controller: _searchController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: 'Search',
+                hintText: 'Search Username',
               ),
             ),
             const SizedBox(height: 20),
@@ -92,7 +93,8 @@ class _AdoptersFilterState extends State<AdoptersFilter> {
                     if (missingChecked) {
                       searchMissing = "Missing Pet";
                     }
-                    // Add your logic here to handle the search values
+                    Navigator.pushReplacementNamed(
+                        context, AppRoutes.adopterDashboard);
                   },
                   child: const Text('Save'),
                   style: ElevatedButton.styleFrom(
