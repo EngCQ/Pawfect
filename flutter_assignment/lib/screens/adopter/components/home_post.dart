@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_assignment/screens/adopter/adopters_post_details.dart';
-import 'package:flutter_assignment/screens/adopter/default/adopters_design.dart';
 
 class HomePost extends StatelessWidget {
   final String postName;
@@ -8,12 +6,13 @@ class HomePost extends StatelessWidget {
   final String postPetName;
   final String postType;
 
-  const HomePost(
-      {super.key,
-      required this.postName,
-      required this.postImage,
-      required this.postPetName,
-      required this.postType});
+  const HomePost({
+    super.key,
+    required this.postName,
+    required this.postImage,
+    required this.postPetName,
+    required this.postType,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +23,10 @@ class HomePost extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(postImage),
-            fit: BoxFit.fill, // Adjust the fit based on your needs
+            image: NetworkImage(postImage), // Use NetworkImage for the image
+            fit: BoxFit.fill,
           ),
-          color: Colors.deepPurple, // Fallback color if image fails to load
+          color: Colors.deepPurple,
         ),
         child: Stack(
           children: [
@@ -54,7 +53,7 @@ class HomePost extends StatelessWidget {
               bottom: 0,
               right: 0,
               child: Container(
-                width: Design.getScreenWidth(context) - 10,
+                width: MediaQuery.of(context).size.width - 10,
                 padding: const EdgeInsets.all(10),
                 color: Colors.blue.withOpacity(0.5),
                 child: Row(

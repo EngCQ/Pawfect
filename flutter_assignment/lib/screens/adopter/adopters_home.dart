@@ -1,18 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'components/home_post.dart';
 import 'default/adopters_default_header.dart';
 import 'default/adopters_navigation_bar.dart';
-import 'package:flutter_assignment/routes.dart';
 
 class AdoptersHome extends StatelessWidget {
-  AdoptersHome({super.key});
+  const AdoptersHome({super.key});
 
-  final List<String> postImage = [
-    'lib/images/pets.jpeg',
-    'lib/images/pets.jpeg',
-    'lib/images/pets.jpeg',
-  ];
+  Future<String> _getImageUrl(String imagePath) async {
+    try {
+      print("Fetching image URL for path: $imagePath");
+      return await FirebaseStorage.instance.ref(imagePath).getDownloadURL();
+    } catch (e) {
+      print("Error fetching image URL: $e");
+      throw e;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +26,7 @@ class AdoptersHome extends StatelessWidget {
         stream:
             FirebaseFirestore.instance.collection('adopters_post').snapshots(),
         builder: (context, snapshot) {
-          //performing with different conditions
+          // Performing with different conditions
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -39,12 +43,24 @@ class AdoptersHome extends StatelessWidget {
             itemCount: posts.length,
             itemBuilder: (context, index) {
               final post = posts[index];
-              return HomePost(
-                postName: post['userName'],
-                postImage: postImage[index %
-                    postImage.length], // Ensure image index is within bounds
-                postPetName: post['petName'],
-                postType: post['type'],
+              return FutureBuilder<String>(
+                future: _getImageUrl(post['imagePath']),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return const Center(child: Text('Error loading image'));
+                  }
+                  final imageUrl = snapshot.data ?? '';
+
+                  return HomePost(
+                    postName: post['userName'],
+                    postImage: imageUrl,
+                    postPetName: post['petName'],
+                    postType: post['type'],
+                  );
+                },
               );
             },
           );

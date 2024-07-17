@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment/routes.dart';
+import 'package:flutter_assignment/screens/adopter/adopter_dashboard.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_app_color.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_appointment.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_favourite.dart';
@@ -18,8 +20,9 @@ class AdoptersNavigationBar extends StatelessWidget {
             scale: 0.75,
             child: IconButton(
               onPressed: () {
-                if (ModalRoute.of(context)?.settings.name != '/home') {
-                  Navigator.pushNamed(context, '/home');
+                if (ModalRoute.of(context)?.settings.name != AdopterDashboard) {
+                  Navigator.pushReplacementNamed(
+                      context, AppRoutes.adopterDashboard);
                 }
               },
               icon: Image.asset("lib/images/home.png"),
@@ -29,8 +32,10 @@ class AdoptersNavigationBar extends StatelessWidget {
             scale: 1,
             child: IconButton(
               onPressed: () {
-                if (ModalRoute.of(context)?.settings.name != '/favourites') {
-                  Navigator.pushNamed(context, '/favourites');
+                if (ModalRoute.of(context)?.settings.name !=
+                    AdoptersFavourite) {
+                  Navigator.pushReplacementNamed(
+                      context, AppRoutes.adopterFavourite);
                 }
               },
               icon: Image.asset("lib/images/favourite.png"),
@@ -40,8 +45,10 @@ class AdoptersNavigationBar extends StatelessWidget {
             scale: 1,
             child: IconButton(
               onPressed: () {
-                if (ModalRoute.of(context)?.settings.name != '/appointments') {
-                  Navigator.pushNamed(context, '/appointments');
+                if (ModalRoute.of(context)?.settings.name !=
+                    AdoptersAppointment) {
+                  Navigator.pushReplacementNamed(
+                      context, AppRoutes.adopterAppointment);
                 }
               },
               icon: Image.asset("lib/images/calender.png"),
@@ -51,8 +58,9 @@ class AdoptersNavigationBar extends StatelessWidget {
             scale: 0.8,
             child: IconButton(
               onPressed: () {
-                if (ModalRoute.of(context)?.settings.name != '/chat') {
-                  Navigator.pushNamed(context, '/chat');
+                if (ModalRoute.of(context)?.settings.name != AdoptersChatList) {
+                  Navigator.pushReplacementNamed(
+                      context, AppRoutes.adopterChatList);
                 }
               },
               icon: Image.asset("lib/images/chat.png"),

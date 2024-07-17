@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_appointment.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_chat_list.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_favourite.dart';
 import 'screens/admin/admin_dashboard.dart';
 
 import 'screens/auth/sign_in_screen.dart';
@@ -29,21 +32,19 @@ import 'screens/admin/admin_add_pet.dart';
 import 'screens/admin/admin_appo_management.dart';
 import 'screens/admin/admin_edit_user.dart';
 
-
 class AppRoutes {
   static const String splashScreen = '/';
-  
-  
+
   static const String signIn = '/signIn';
   static const String signUp = '/signUp';
   static const String sellerDashboard = '/sellerDashboard';
 
-
-  //Adaptor
-  //static const String adopterDashboard = '/adopterDashboard';
+  //Adopter
   static const String adopterDashboard = '/AdoptersHome';
-
-
+  static const String adopterHomePost = '/AdopterHome';
+  static const String adopterFavourite = '/AdopterFavourite';
+  static const String adopterAppointment = '/AdopterAppointment';
+  static const String adopterChatList = '/AdopterChatList';
 
   //Seller
   static const String adminDashboard = '/adminDashboard';
@@ -65,8 +66,6 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const SplashScreen());
       case adminDashboard:
         return MaterialPageRoute(builder: (_) => const AdminDashboard());
-      case adopterDashboard:
-        return MaterialPageRoute(builder: (_) =>  AdoptersHome());
       case sellerDashboard:
         return MaterialPageRoute(builder: (_) => const SellerDashboard());
       case adminUserManagement:
@@ -89,6 +88,14 @@ class AppRoutes {
         );
       case adminAppoManagement:
         return MaterialPageRoute(builder: (_) => const AdminAppoManagement());
+      case adopterDashboard:
+        return MaterialPageRoute(builder: (_) => const AdoptersHome());
+      case adopterFavourite:
+        return MaterialPageRoute(builder: (_) => AdoptersFavourite());
+      case adopterAppointment:
+        return MaterialPageRoute(builder: (_) => AdoptersAppointment());
+      case adopterChatList:
+        return MaterialPageRoute(builder: (_) => AdoptersChatList());
       default:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
     }
