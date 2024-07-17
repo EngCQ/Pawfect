@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_assignment/screens/adopter/default/adopters_navigation_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
@@ -30,17 +31,12 @@ class _AddingTestingDataState extends State<AddingTestingData> {
   }
 
   Future<String> _uploadImage(File image) async {
-    // Create a unique file name
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    // Get a reference to the storage bucket
     Reference storageRef =
         FirebaseStorage.instance.ref().child('images/$fileName');
-    // Upload the file
     UploadTask uploadTask = storageRef.putFile(image);
-    // Wait until the upload is complete
-    TaskSnapshot snapshot = await uploadTask;
-    // Get the download URL
-    return await snapshot.ref.getDownloadURL();
+    await uploadTask;
+    return 'images/$fileName';
   }
 
   @override
@@ -77,7 +73,6 @@ class _AddingTestingDataState extends State<AddingTestingData> {
               ElevatedButton(
                   onPressed: () async {
                     if (_image != null) {
-                      // Show loading indicator
                       showDialog(
                         context: context,
                         barrierDismissible: false,
@@ -87,10 +82,7 @@ class _AddingTestingDataState extends State<AddingTestingData> {
                       );
 
                       try {
-                        // Upload image and get URL
-                        String imageUrl = await _uploadImage(_image!);
-
-                        // Save post data to Firestore
+                        String filePath = await _uploadImage(_image!);
                         CollectionReference collRef = FirebaseFirestore.instance
                             .collection("adopters_post");
                         await collRef.add({
@@ -98,28 +90,23 @@ class _AddingTestingDataState extends State<AddingTestingData> {
                           'petName': controllerPetName.text,
                           'description': controllerDescription.text,
                           'type': controllerStatus.text,
-                          'imagePath': imageUrl // Save image URL
+                          'imagePath': filePath // Save file path
                         });
 
-                        // Hide loading indicator
                         Navigator.of(context).pop();
 
-                        // Show success message
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content: Text('Post submitted successfully')),
                         );
                       } catch (e) {
-                        // Hide loading indicator
                         Navigator.of(context).pop();
 
-                        // Show error message
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Failed to submit post: $e')),
                         );
                       }
                     } else {
-                      // Handle the case when no image is selected
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Please pick an image')),
                       );
@@ -130,6 +117,7 @@ class _AddingTestingDataState extends State<AddingTestingData> {
           ),
         ),
       ),
+      bottomNavigationBar: AdoptersNavigationBar(),
     );
   }
 }

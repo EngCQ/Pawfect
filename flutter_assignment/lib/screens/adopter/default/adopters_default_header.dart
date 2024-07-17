@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment/routes.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_notification.dart';
+import 'package:flutter_assignment/screens/adopter/default/adopters_app_color.dart';
 
 class DefaultHeader extends StatelessWidget implements PreferredSizeWidget {
   const DefaultHeader({super.key});
@@ -6,7 +9,7 @@ class DefaultHeader extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.cyan,
+      backgroundColor: AppColor.secondColor,
       automaticallyImplyLeading: false,
       title: const Text(
         "PawFect",
@@ -20,14 +23,18 @@ class DefaultHeader extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: () {
-            print("filter clicked");
+            if (ModalRoute.of(context)?.settings.name !=
+                AppRoutes.adopterFilter) {
+              Navigator.pushNamed(context, AppRoutes.adopterFilter);
+            }
           },
           icon: Image.asset("lib/images/filter.png"),
         ),
         IconButton(
           onPressed: () {
-            if (ModalRoute.of(context)?.settings.name != '/notification') {
-              Navigator.pushNamed(context, '/notification');
+            if (ModalRoute.of(context)?.settings.name !=
+                AppRoutes.adopterNotification) {
+              Navigator.pushNamed(context, AppRoutes.adopterNotification);
             }
           },
           icon: Image.asset("lib/images/bell.png"),

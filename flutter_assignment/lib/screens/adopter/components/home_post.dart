@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment/routes.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_post_details.dart';
 
 class HomePost extends StatelessWidget {
   final String postName;
   final String postImage;
   final String postPetName;
   final String postType;
+  final String postDescription;
 
-  const HomePost({
+  HomePost({
     super.key,
     required this.postName,
     required this.postImage,
     required this.postPetName,
     required this.postType,
+    required this.postDescription,
   });
 
   @override
@@ -23,18 +27,26 @@ class HomePost extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(postImage), // Use NetworkImage for the image
+            image: NetworkImage(postImage),
             fit: BoxFit.fill,
           ),
-          color: Colors.deepPurple,
+          color: Colors.white,
         ),
         child: Stack(
           children: [
             GestureDetector(
               onTap: () {
-                if (ModalRoute.of(context)?.settings.name != '/post_details') {
-                  Navigator.pushNamed(context, '/post_details');
-                }
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.adopterPostDetails,
+                  arguments: {
+                    'postName': postName,
+                    'postImage': postImage,
+                    'postPetName': postPetName,
+                    'postType': postType,
+                    'postDescription': postDescription,
+                  },
+                );
               },
             ),
             Positioned(

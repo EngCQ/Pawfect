@@ -5,9 +5,11 @@ class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<User?> signUpWithEmailAndPassword(String email, String password, String fullName, String role, String location) async {
+  Future<User?> signUpWithEmailAndPassword(String email, String password,
+      String fullName, String role, String location) async {
     try {
-      UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -35,14 +37,19 @@ class AuthService {
     }
   }
 
-  Future<User?> signInWithEmailAndPassword(String email, String password) async {
+  Future<User?> signInWithEmailAndPassword(
+      String email, String password) async {
     try {
-      UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+      UserCredential userCredential =
+          await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       if (userCredential.user != null) {
-        await _firestore.collection('users').doc(userCredential.user!.uid).update({
+        await _firestore
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .update({
           'isOnline': true,
           'lastSeen': FieldValue.serverTimestamp(),
         });
@@ -66,7 +73,8 @@ class AuthService {
     await _firebaseAuth.signOut();
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails(String uid) async {
+  Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails(
+      String uid) async {
     return await _firestore.collection('users').doc(uid).get();
   }
 }

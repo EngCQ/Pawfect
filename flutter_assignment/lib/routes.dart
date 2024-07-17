@@ -1,52 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_filter.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_notification.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_post_details.dart';
+import 'package:flutter_assignment/screens/auth/sign_in_screen.dart';
+import 'package:flutter_assignment/screens/auth/sign_up_screen.dart';
+import 'package:flutter_assignment/screens/common/splash_screen.dart';
+import 'package:flutter_assignment/screens/admin/admin_dashboard.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_home.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_favourite.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_appointment.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_chat_list.dart';
-import 'package:flutter_assignment/screens/adopter/adopters_favourite.dart';
-import 'screens/admin/admin_dashboard.dart';
-
-import 'screens/auth/sign_in_screen.dart';
-import 'screens/auth/sign_up_screen.dart';
-import 'screens/common/splash_screen.dart';
-
-//Adopters
-// import 'screens/adopter/adopter_dashboard.dart';
-// import "screens/adopter/adding_testing_data.dart";
-// import "screens/adopter/adopters_appointment.dart";
-// import "screens/adopter/adopters_favourite.dart";
-// import "screens/adopter/adopters_filter.dart";
-import "screens/adopter/adopters_home.dart";
-// import "screens/adopter/adopters_notification.dart";
-// import "screens/adopter/adopters_post_details.dart";
-import "screens/adopter/adopters_profile.dart";
-import "screens/adopter/getting_testing_data.dart";
-
-//Seller
-import 'screens/seller/seller_dashboard.dart';
-
-//Admin
-import 'screens/admin/admin_user_management.dart';
-import 'screens/admin/admin_create_user.dart';
-import 'screens/admin/admin_pet_management.dart';
-import 'screens/admin/admin_select_seller_screen.dart';
-import 'screens/admin/admin_add_pet.dart';
-import 'screens/admin/admin_appo_management.dart';
-import 'screens/admin/admin_edit_user.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_profile.dart';
+import 'package:flutter_assignment/screens/seller/seller_dashboard.dart';
+import 'package:flutter_assignment/screens/admin/admin_user_management.dart';
+import 'package:flutter_assignment/screens/admin/admin_create_user.dart';
+import 'package:flutter_assignment/screens/admin/admin_pet_management.dart';
+import 'package:flutter_assignment/screens/admin/admin_select_seller_screen.dart';
+import 'package:flutter_assignment/screens/admin/admin_add_pet.dart';
+import 'package:flutter_assignment/screens/admin/admin_appo_management.dart';
+import 'package:flutter_assignment/screens/admin/admin_edit_user.dart';
 
 class AppRoutes {
   static const String splashScreen = '/';
-
   static const String signIn = '/signIn';
   static const String signUp = '/signUp';
   static const String sellerDashboard = '/sellerDashboard';
 
   //Adopter
   static const String adopterDashboard = '/AdoptersHome';
-  static const String adopterHomePost = '/AdopterHome';
-  static const String adopterFavourite = '/AdopterFavourite';
-  static const String adopterAppointment = '/AdopterAppointment';
-  static const String adopterChatList = '/AdopterChatList';
+  static const String adopterFavourite = '/AdoptersFavourite';
+  static const String adopterAppointment = '/AdoptersAppointment';
+  static const String adopterChatList = '/AdoptersChatList';
+  static const String adopterProfile = '/AdoptersProfile';
+  static const String adopterPostDetails = '/AdoptersPostDetails';
+  static const String adopterNotification = '/notification';
+  static const String adopterFilter = '/filter';
 
-  //Seller
+  //Admin
   static const String adminDashboard = '/adminDashboard';
   static const String adminUserManagement = '/adminUserManagement';
   static const String adminAddUser = '/adminAddUser';
@@ -96,6 +86,24 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => AdoptersAppointment());
       case adopterChatList:
         return MaterialPageRoute(builder: (_) => AdoptersChatList());
+      case adopterProfile:
+        return MaterialPageRoute(builder: (_) => const AdoptersProfile());
+      case adopterPostDetails:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => AdoptersPostDetails(
+            postName: args['postName'],
+            postImage: args['postImage'],
+            postPetName: args['postPetName'],
+            postType: args['postType'],
+            postDescription: args['postDescription'],
+          ),
+        );
+      case adopterNotification:
+        return MaterialPageRoute(builder: (_) => AdoptersNotification());
+      case adopterFilter:
+        return MaterialPageRoute(builder: (_) => AdoptersFilter());
+
       default:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
     }

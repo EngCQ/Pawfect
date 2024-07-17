@@ -10,7 +10,6 @@ class AdoptersHome extends StatelessWidget {
 
   Future<String> _getImageUrl(String imagePath) async {
     try {
-      print("Fetching image URL for path: $imagePath");
       return await FirebaseStorage.instance.ref(imagePath).getDownloadURL();
     } catch (e) {
       print("Error fetching image URL: $e");
@@ -26,7 +25,6 @@ class AdoptersHome extends StatelessWidget {
         stream:
             FirebaseFirestore.instance.collection('adopters_post').snapshots(),
         builder: (context, snapshot) {
-          // Performing with different conditions
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -59,6 +57,7 @@ class AdoptersHome extends StatelessWidget {
                     postImage: imageUrl,
                     postPetName: post['petName'],
                     postType: post['type'],
+                    postDescription: post['description'],
                   );
                 },
               );

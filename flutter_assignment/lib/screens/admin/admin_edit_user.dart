@@ -34,7 +34,10 @@ class _EditUserScreenState extends State<AdminEditUser> {
   }
 
   Future<void> _fetchUserData() async {
-    final userDoc = await FirebaseFirestore.instance.collection('users').doc(widget.userId).get();
+    final userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userId)
+        .get();
     final userData = userDoc.data();
 
     if (userData != null) {
@@ -50,7 +53,8 @@ class _EditUserScreenState extends State<AdminEditUser> {
   }
 
   Future<void> _getImage() async {
-    final pickedImage = await ImagePicker().pickImage(source: _imageSource, imageQuality: 70);
+    final pickedImage =
+        await ImagePicker().pickImage(source: _imageSource, imageQuality: 70);
     if (pickedImage != null) {
       setState(() {
         _selectedImage = File(pickedImage.path);
@@ -111,7 +115,10 @@ class _EditUserScreenState extends State<AdminEditUser> {
           if (imageUrl != null) 'profileImage': imageUrl,
         };
 
-        await FirebaseFirestore.instance.collection('users').doc(widget.userId).update(updateData);
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.userId)
+            .update(updateData);
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('User updated successfully!')),
@@ -136,13 +143,19 @@ class _EditUserScreenState extends State<AdminEditUser> {
   Future<void> _sendPasswordResetLink() async {
     try {
       // Send password reset link to the user's email
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text);
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: _emailController.text);
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password reset link sent to email successfully!')),
+        const SnackBar(
+            content: Text('Password reset link sent to email successfully!')),
       );
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to send password reset link. Please try again.')),
+        const SnackBar(
+            content:
+                Text('Failed to send password reset link. Please try again.')),
       );
     }
   }
