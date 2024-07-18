@@ -25,16 +25,13 @@ class AdoptersPostDetails extends StatefulWidget {
 
   Future<void> saveToFavorites(BuildContext context) async {
     try {
-      // Reference to Firestore collection
       CollectionReference favoritesCollection =
           FirebaseFirestore.instance.collection('favorites');
 
-      // Get current user
       String? uid = FirebaseAuth.instance.currentUser?.uid;
 
-      // Add document with post details
       await favoritesCollection.add({
-        'userUid': uid,
+        'uid': uid,
         'postSellerUid': postSellerUid,
         'postName': postName,
         'postImage': postImage,
@@ -151,19 +148,17 @@ class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
             ),
           ),
           if (showBookingForm)
-            AdoptersBookingFormOverlay(
-              postName: widget.postName,
-              postImage: widget.postImage,
-              postPetName: widget.postPetName,
-              postType: widget.postType,
-              postDescription: widget.postDescription,
-              postSellerUid: widget.postSellerUid,
-              userUid: FirebaseAuth.instance.currentUser!.uid,
+            BookingFormOverlay(
               onClose: () {
                 setState(() {
                   showBookingForm = false;
                 });
               },
+              postName: widget.postName,
+              postImage: widget.postImage,
+              postPetName: widget.postPetName,
+              postType: widget.postType,
+              postDescription: widget.postDescription,
             ),
         ],
       ),
@@ -179,7 +174,6 @@ class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
                 isFavorited = !isFavorited;
               });
 
-              // Save to favorites only when the button is pressed
               if (isFavorited) {
                 widget.saveToFavorites(context);
               }
@@ -195,8 +189,6 @@ class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
               );
             },
           ),
-
-          // Conditionally show the ElevatedButton based on postType
           if (widget.postType == 'Pet Adoption')
             SizedBox(
               height: 40,
@@ -232,7 +224,7 @@ class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  backgroundColor: Colors.red, // Example color for other types
+                  backgroundColor: Colors.red,
                 ),
                 onPressed: () {},
                 child: const Text(

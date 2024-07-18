@@ -1,35 +1,30 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
-class AdoptersBookingFormOverlay extends StatefulWidget {
+class BookingFormOverlay extends StatefulWidget {
   final VoidCallback onClose;
   final String postName;
   final String postImage;
   final String postPetName;
   final String postType;
   final String postDescription;
-  final String postSellerUid;
-  final String userUid; // Ensure userUid is handled
 
-  const AdoptersBookingFormOverlay({
-    Key? key,
+  BookingFormOverlay({
+    super.key,
     required this.onClose,
     required this.postName,
     required this.postImage,
     required this.postPetName,
     required this.postType,
     required this.postDescription,
-    required this.postSellerUid,
-    required this.userUid, // Initialize userUid in the constructor
-  }) : super(key: key);
+  });
 
   @override
-  _AdoptersBookingFormOverlayState createState() =>
-      _AdoptersBookingFormOverlayState();
+  _BookingFormOverlayState createState() => _BookingFormOverlayState();
 }
 
-class _AdoptersBookingFormOverlayState
-    extends State<AdoptersBookingFormOverlay> {
+class _BookingFormOverlayState extends State<BookingFormOverlay> {
   final _formKey = GlobalKey<FormState>();
   String? _phoneNumber;
   DateTime? _selectedDate;
@@ -63,7 +58,7 @@ class _AdoptersBookingFormOverlayState
   }
 
   String? _validatePhoneNumber(String? value) {
-    final RegExp regex = RegExp(r'^\d{9,10}$');
+    final RegExp regex = RegExp(r'^\d{10}$');
     if (value == null || value.isEmpty || !regex.hasMatch(value)) {
       return 'Please enter a valid phone number';
     }
@@ -94,38 +89,36 @@ class _AdoptersBookingFormOverlayState
   Future<void> _saveBooking() async {
     if (_formKey.currentState!.validate()) {
       try {
-        // Reference to Firestore collection
         CollectionReference bookingsCollection =
             FirebaseFirestore.instance.collection('bookings');
 
-        // Add document with booking details
+        String? uid = FirebaseAuth.instance.currentUser?.uid;
+
         await bookingsCollection.add({
-          'userUid': widget.userUid, // Use widget.userUid here
-          'postSellerUid': widget.postSellerUid,
+          'uid': uid,
           'postName': widget.postName,
           'postImage': widget.postImage,
           'postPetName': widget.postPetName,
           'postType': widget.postType,
           'postDescription': widget.postDescription,
           'phoneNumber': _phoneNumber,
-          'bookingDate': _selectedDate,
-          'bookingTime': _selectedTime,
+          'date': _selectedDate,
+          'time': _selectedTime?.format(context),
           'notes': _notesController.text,
           'timestamp': FieldValue.serverTimestamp(),
         });
-
-        widget.onClose(); // Close the overlay after saving
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Booking successful'),
           ),
         );
+        widget.onClose();
       } catch (e) {
         print('Error saving booking: $e');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to save booking: $e'),
+            content: Text('Failed to book: $e'),
           ),
         );
       }
@@ -134,105 +127,107 @@ class _AdoptersBookingFormOverlayState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        child: Center(
+    return Container(
+      color: Colors.black.withOpacity(0.5),
+      child: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height * 0.8,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
               color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3),
-                ),
-              ],
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Form(
               key: _formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Booking Form',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    'Booking Form',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Phone Number',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: _validatePhoneNumber,
-                      onSaved: (value) => _phoneNumber = value,
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () => _selectDate(context),
+                    child: Text(_selectedDate == null
+                        ? 'Select Date'
+                        : 'Selected Date: ${_selectedDate!.toLocal()}'
+                            .split(' ')[0]),
+                  ),
+                  if (_selectedDate == null)
+                    Text(
+                      _validateDate() ?? '',
+                      style: const TextStyle(color: Colors.red),
                     ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            readOnly: true,
-                            decoration: InputDecoration(
-                              labelText: _selectedDate == null
-                                  ? 'Select Date'
-                                  : 'Date: ${_selectedDate!.toLocal()}'
-                                      .split(' ')[0],
-                              border: OutlineInputBorder(),
-                            ),
-                            validator: (_) => _validateDate(),
-                            onTap: () => _selectDate(context),
-                          ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () => _selectTime(context),
+                    child: Text(_selectedTime == null
+                        ? 'Select Time'
+                        : 'Selected Time: ${_selectedTime!.format(context)}'),
+                  ),
+                  if (_selectedTime == null)
+                    Text(
+                      _validateTime() ?? '',
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    onChanged: (value) {
+                      _phoneNumber = value;
+                    },
+                    validator: _validatePhoneNumber,
+                    decoration: const InputDecoration(
+                      labelText: 'Phone Number',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.phone,
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _notesController,
+                    maxLines: 5,
+                    validator: _validateNotes,
+                    decoration: const InputDecoration(
+                      labelText: 'Notes',
+                      border: OutlineInputBorder(),
+                    ),
+                    textAlignVertical: TextAlignVertical.top,
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _saveBooking,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
                         ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: TextFormField(
-                            readOnly: true,
-                            decoration: InputDecoration(
-                              labelText: _selectedTime == null
-                                  ? 'Select Time'
-                                  : 'Time: ${_selectedTime!.format(context)}',
-                              border: OutlineInputBorder(),
-                            ),
-                            validator: (_) => _validateTime(),
-                            onTap: () => _selectTime(context),
-                          ),
+                        child: const Text(
+                          'Submit',
+                          style: TextStyle(color: Colors.white),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      controller: _notesController,
-                      maxLines: 3,
-                      decoration: InputDecoration(
-                        labelText: 'Notes (optional)',
-                        border: OutlineInputBorder(),
                       ),
-                      validator: _validateNotes,
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                          onPressed: _saveBooking,
-                          child: const Text('Submit'),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: widget.onClose,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),

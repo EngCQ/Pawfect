@@ -101,32 +101,32 @@ class AdoptersBookingDetails extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 30),
                   Text(
                     'Date: $date',
                     style: TextStyle(
-                      fontSize: Design.descriptionDetailSize,
+                      fontSize: Design.descriptionTitleSize,
                       color: Colors.white,
                     ),
                   ),
                   Text(
                     'Time: $time',
                     style: TextStyle(
-                      fontSize: Design.descriptionDetailSize,
+                      fontSize: Design.descriptionTitleSize,
                       color: Colors.white,
                     ),
                   ),
                   Text(
                     'Phone: $phoneNumber',
                     style: TextStyle(
-                      fontSize: Design.descriptionDetailSize,
+                      fontSize: Design.descriptionTitleSize,
                       color: Colors.white,
                     ),
                   ),
                   Text(
                     'Notes: $notes',
                     style: TextStyle(
-                      fontSize: Design.descriptionDetailSize,
+                      fontSize: Design.descriptionTitleSize,
                       color: Colors.white,
                     ),
                   ),

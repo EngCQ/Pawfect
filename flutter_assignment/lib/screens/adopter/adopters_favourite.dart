@@ -35,7 +35,7 @@ class AdoptersFavourite extends StatelessWidget {
               List<DocumentSnapshot> documents =
                   snapshot.data!.docs.where((doc) {
                 Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-                return data['userUid'] == provider.userDetails!['uid'];
+                return data['uid'] == provider.userDetails!['uid'];
               }).toList();
 
               if (documents.isEmpty) {
