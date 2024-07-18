@@ -1,6 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
-import 'package:flutter_assignment/screens/adopter/components/booking_form_overlay.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_booking_form_overlay.dart';
 import 'default/adopters_back_header.dart';
 import 'default/adopters_design.dart';
 
@@ -10,6 +11,7 @@ class AdoptersPostDetails extends StatefulWidget {
   final String postPetName;
   final String postType;
   final String postDescription;
+  final String postSellerUid;
 
   const AdoptersPostDetails({
     Key? key,
@@ -18,6 +20,7 @@ class AdoptersPostDetails extends StatefulWidget {
     required this.postPetName,
     required this.postType,
     required this.postDescription,
+    required this.postSellerUid,
   }) : super(key: key);
 
   Future<void> saveToFavorites(BuildContext context) async {
@@ -26,15 +29,19 @@ class AdoptersPostDetails extends StatefulWidget {
       CollectionReference favoritesCollection =
           FirebaseFirestore.instance.collection('favorites');
 
+      // Get current user
+      String? uid = FirebaseAuth.instance.currentUser?.uid;
+
       // Add document with post details
       await favoritesCollection.add({
+        'userUid': uid,
+        'postSellerUid': postSellerUid,
         'postName': postName,
         'postImage': postImage,
         'postPetName': postPetName,
         'postType': postType,
         'postDescription': postDescription,
-        'timestamp': FieldValue
-            .serverTimestamp(), // Optional: Timestamp of when it was added
+        'timestamp': FieldValue.serverTimestamp(),
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -66,33 +73,28 @@ class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
       appBar: const BackHeader(),
       body: Stack(
         children: [
-          Column(
-            children: [
-              SizedBox(
-                height: 330,
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(widget.postImage),
-                          fit: BoxFit.fill,
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 330,
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(widget.postImage),
+                            fit: BoxFit.fill,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                height: 300,
-                color: Colors.blue,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 10.0,
-                    bottom: 20,
-                    top: 10,
+                    ],
                   ),
+                ),
+                Container(
+                  width: double.infinity,
+                  color: Colors.blue,
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -145,11 +147,18 @@ class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
                     ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           if (showBookingForm)
-            BookingFormOverlay(
+            AdoptersBookingFormOverlay(
+              postName: widget.postName,
+              postImage: widget.postImage,
+              postPetName: widget.postPetName,
+              postType: widget.postType,
+              postDescription: widget.postDescription,
+              postSellerUid: widget.postSellerUid,
+              userUid: FirebaseAuth.instance.currentUser!.uid,
               onClose: () {
                 setState(() {
                   showBookingForm = false;

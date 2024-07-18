@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_filter.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_notification.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_post_details.dart';
+import 'package:flutter_assignment/screens/adopter/default/adopters_booking_details.dart';
 import 'package:flutter_assignment/screens/auth/sign_in_screen.dart';
 import 'package:flutter_assignment/screens/auth/sign_up_screen.dart';
 import 'package:flutter_assignment/screens/common/splash_screen.dart';
@@ -33,6 +35,7 @@ class AppRoutes {
   static const String adopterChatList = '/AdoptersChatList';
   static const String adopterProfile = '/AdoptersProfile';
   static const String adopterPostDetails = '/AdoptersPostDetails';
+  static const String adopterBookingDetails = '/AdoptersBookingDetails';
   static const String adopterNotification = '/notification';
   static const String adopterFilter = '/filter';
 
@@ -89,14 +92,31 @@ class AppRoutes {
       case adopterProfile:
         return MaterialPageRoute(builder: (_) => const AdoptersProfile());
       case adopterPostDetails:
-        final args = settings.arguments as Map<String, dynamic>;
+        final detailsArgs = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (_) => AdoptersPostDetails(
+            postName: detailsArgs['postName'],
+            postImage: detailsArgs['postImage'],
+            postPetName: detailsArgs['postPetName'],
+            postType: detailsArgs['postType'],
+            postDescription: detailsArgs['postDescription'],
+            postSellerUid: detailsArgs['sellerUid'],
+          ),
+        );
+
+      case adopterBookingDetails:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => AdoptersBookingDetails(
             postName: args['postName'],
             postImage: args['postImage'],
             postPetName: args['postPetName'],
             postType: args['postType'],
             postDescription: args['postDescription'],
+            date: args['date'],
+            time: args['time'],
+            phoneNumber: args['phoneNumber'],
+            notes: args['notes'],
           ),
         );
       case adopterNotification:

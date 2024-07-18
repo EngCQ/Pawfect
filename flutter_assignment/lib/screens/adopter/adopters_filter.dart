@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment/providers/user_provider.dart';
 import 'package:flutter_assignment/routes.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_app_color.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_back_header.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_design.dart';
+import 'package:provider/provider.dart';
 
 class AdoptersFilter extends StatefulWidget {
   const AdoptersFilter({Key? key}) : super(key: key);

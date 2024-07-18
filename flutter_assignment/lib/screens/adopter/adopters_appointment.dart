@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment/providers/user_provider.dart';
+import 'package:flutter_assignment/screens/adopter/components/booking.dart';
+import 'package:provider/provider.dart';
 import 'default/adopters_default_header.dart';
 import 'default/adopters_design.dart';
 import 'default/adopters_navigation_bar.dart';
@@ -6,73 +10,79 @@ import 'default/adopters_navigation_bar.dart';
 class AdoptersAppointment extends StatelessWidget {
   AdoptersAppointment({super.key});
 
-  // List of all appointment details
-  final List<String> appointmentName = [
-    'post 1',
-    'post 2',
-    'post 3',
-  ];
-
-  final List<String> appointmenImage = [
-    'lib/images/pets.jpeg',
-    'lib/images/pets.jpeg',
-    'lib/images/pets.jpeg',
-  ];
-
-  final List<String> appointmentPetName = [
-    'Teddy',
-    'Jakie',
-    'Joy',
-  ];
-
-  final List<String> appointmentType = [
-    'Missing Pet',
-    'Pet Adoption',
-    'Pet Adoption',
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const DefaultHeader(),
-      body: appointmentName.isEmpty
-          ? Center(
-              child: Text(
-                "No Appointment",
-                style: TextStyle(fontSize: Design.emptyPageSize),
-              ),
-            )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
+      body: Consumer<UserProvider>(
+        builder: (context, provider, child) {
+          if (provider.userDetails == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return StreamBuilder(
+            stream:
+                FirebaseFirestore.instance.collection('bookings').snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+
+              List<DocumentSnapshot> documents =
+                  snapshot.data!.docs.where((doc) {
+                Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+                return data['uid'] == provider.userDetails!['uid'];
+              }).toList();
+
+              if (documents.isEmpty) {
+                return Center(
                   child: Text(
-                    'Your Booking',
-                    style: TextStyle(fontSize: 20),
-                    textAlign: TextAlign.left,
+                    "No Appointment",
+                    style: TextStyle(fontSize: Design.emptyPageSize),
                   ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: appointmentName.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: Image.asset(appointmenImage[index]),
-                        title: Text(appointmentName[index]),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Pet Name: ${appointmentPetName[index]}'),
-                            Text('Post Type: ${appointmentType[index]}'),
-                          ],
-                        ),
-                      );
-                    },
+                );
+              }
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      'Your Booking',
+                      style: TextStyle(fontSize: 20),
+                      textAlign: TextAlign.left,
+                    ),
                   ),
-                ),
-              ],
-            ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: documents.length,
+                      itemBuilder: (context, index) {
+                        Map<String, dynamic> data =
+                            documents[index].data() as Map<String, dynamic>;
+                        return Booking(
+                          image: data['postImage'] ?? '',
+                          name: data['postName'] ?? '',
+                          date: data['date'].toDate().toString().split(' ')[0],
+                          time: data['time'] ?? '',
+                          phoneNumber: data['phoneNumber'] ?? '',
+                          notes: data['notes'] ?? '',
+                          postType: data['postType'] ?? '',
+                          postDescription: data['postDescription'] ?? '',
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      ),
       bottomNavigationBar: const AdoptersNavigationBar(),
     );
   }

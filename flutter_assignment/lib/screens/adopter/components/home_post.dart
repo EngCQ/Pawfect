@@ -8,6 +8,7 @@ class HomePost extends StatelessWidget {
   final String postPetName;
   final String postType;
   final String postDescription;
+  final String sellerUid;
 
   HomePost({
     super.key,
@@ -16,6 +17,7 @@ class HomePost extends StatelessWidget {
     required this.postPetName,
     required this.postType,
     required this.postDescription,
+    required this.sellerUid,
   });
 
   @override
@@ -45,6 +47,7 @@ class HomePost extends StatelessWidget {
                     'postPetName': postPetName,
                     'postType': postType,
                     'postDescription': postDescription,
+                    'sellerUid': sellerUid,
                   },
                 );
               },

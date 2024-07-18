@@ -58,6 +58,7 @@ class AdoptersHome extends StatelessWidget {
                     postPetName: post['petName'],
                     postType: post['type'],
                     postDescription: post['description'],
+                    sellerUid: post['sellerUid'],
                   );
                 },
               );
