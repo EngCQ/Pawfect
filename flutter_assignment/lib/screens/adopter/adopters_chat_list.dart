@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_chat.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_default_header.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AdoptersChatList extends StatefulWidget {
   const AdoptersChatList({super.key});
@@ -13,6 +14,7 @@ class AdoptersChatList extends StatefulWidget {
 
 class _AdoptersChatListState extends State<AdoptersChatList> {
   String searchQuery = '';
+  final currentUser = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class _AdoptersChatListState extends State<AdoptersChatList> {
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Search...',
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide.none,
@@ -52,7 +54,7 @@ class _AdoptersChatListState extends State<AdoptersChatList> {
                 }
                 var users = snapshot.data!.docs;
                 var filteredUsers = users.where((user) {
-                  var fullName = user['fullName'] as String;
+                  var fullName = user['fullName'] as String? ?? '';
                   return fullName
                       .toLowerCase()
                       .contains(searchQuery.toLowerCase());
@@ -62,18 +64,15 @@ class _AdoptersChatListState extends State<AdoptersChatList> {
                   itemCount: filteredUsers.length,
                   itemBuilder: (context, index) {
                     var user = filteredUsers[index];
-                    var fullName = user['fullName'];
-                    var isOnline = user['isOnline'];
-                    var image = user['profileImage'];
+                    var fullName = user['fullName'] ?? 'Unknown';
+                    var isOnline = user['isOnline'] ?? false;
+                    var image = user['profileImage'] ?? '';
 
                     return ListTile(
                       leading: CircleAvatar(
-                        backgroundImage: image != null && image.isNotEmpty
-                            ? NetworkImage(image)
-                            : null,
-                        child: image == null || image.isEmpty
-                            ? Icon(Icons.person)
-                            : null,
+                        backgroundImage:
+                            image.isNotEmpty ? NetworkImage(image) : null,
+                        child: image.isEmpty ? Icon(Icons.person) : null,
                       ),
                       title: Text(fullName),
                       subtitle: Text(isOnline ? 'Online' : 'Offline'),
@@ -81,7 +80,11 @@ class _AdoptersChatListState extends State<AdoptersChatList> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AdoptersChat(userId: user.id),
+                            builder: (context) => AdoptersChat(
+                              userId: user.id,
+                              userName: fullName,
+                              userImage: image,
+                            ),
                           ),
                         );
                       },

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 import 'package:flutter_assignment/screens/adopter/adopters_booking_form_overlay.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_chat.dart'; // Import AdoptersChat
 import 'default/adopters_back_header.dart';
 import 'default/adopters_design.dart';
 
@@ -63,6 +64,45 @@ class AdoptersPostDetails extends StatefulWidget {
 class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
   bool isFavorited = false;
   bool showBookingForm = false;
+
+  void contactSeller(BuildContext context) async {
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.postSellerUid)
+          .get();
+
+      if (userDoc.exists) {
+        var userData = userDoc.data() as Map<String, dynamic>;
+        String userName = userData['fullName'] ?? 'Unknown';
+        String userImage = userData['profileImage'] ?? '';
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AdoptersChat(
+              userId: widget.postSellerUid,
+              userName: userName,
+              userImage: userImage,
+            ),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('User not found'),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error contacting seller: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to contact seller: $e'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +266,9 @@ class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
                   ),
                   backgroundColor: Colors.red,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  contactSeller(context);
+                },
                 child: const Text(
                   "Contact",
                   style: TextStyle(
