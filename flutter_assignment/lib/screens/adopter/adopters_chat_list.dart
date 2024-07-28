@@ -1,11 +1,99 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_chat.dart';
+import 'package:flutter_assignment/screens/adopter/default/adopters_default_header.dart';
+import 'package:flutter_assignment/screens/adopter/default/adopters_navigation_bar.dart';
 
-class AdoptersChatList extends StatelessWidget {
+class AdoptersChatList extends StatefulWidget {
   const AdoptersChatList({super.key});
 
   @override
+  _AdoptersChatListState createState() => _AdoptersChatListState();
+}
+
+class _AdoptersChatListState extends State<AdoptersChatList> {
+  String searchQuery = '';
+
+  @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Scaffold(
+      appBar: DefaultHeader(),
+      body: Column(
+        children: [
+          // Search bar
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.grey[200],
+              ),
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value;
+                });
+              },
+            ),
+          ),
+          // Chat user list
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream:
+                  FirebaseFirestore.instance.collection('users').snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                var users = snapshot.data!.docs;
+                var filteredUsers = users.where((user) {
+                  var fullName = user['fullName'] as String;
+                  return fullName
+                      .toLowerCase()
+                      .contains(searchQuery.toLowerCase());
+                }).toList();
+
+                return ListView.builder(
+                  itemCount: filteredUsers.length,
+                  itemBuilder: (context, index) {
+                    var user = filteredUsers[index];
+                    var fullName = user['fullName'];
+                    var isOnline = user['isOnline'];
+                    var image = user['profileImage'];
+
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: image != null && image.isNotEmpty
+                            ? NetworkImage(image)
+                            : null,
+                        child: image == null || image.isEmpty
+                            ? Icon(Icons.person)
+                            : null,
+                      ),
+                      title: Text(fullName),
+                      subtitle: Text(isOnline ? 'Online' : 'Offline'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AdoptersChat(userId: user.id),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: AdoptersNavigationBar(),
+    );
   }
 }
