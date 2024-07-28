@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_booking_form_overlay.dart';
-import 'package:flutter_assignment/screens/adopter/adopters_chat.dart'; // Import AdoptersChat
+import 'package:flutter_assignment/screens/adopter/adopters_chat.dart';
 import 'default/adopters_back_header.dart';
 import 'default/adopters_design.dart';
 
@@ -24,22 +24,67 @@ class AdoptersPostDetails extends StatefulWidget {
     required this.postSellerUid,
   }) : super(key: key);
 
+  @override
+  _AdoptersPostDetailsState createState() => _AdoptersPostDetailsState();
+}
+
+class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
+  bool isFavorited = false;
+  bool showBookingForm = false;
+  String? favoriteDocId;
+
+  @override
+  void initState() {
+    super.initState();
+    checkIfFavorited();
+  }
+
+  Future<void> checkIfFavorited() async {
+    try {
+      String? uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid != null) {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('favorites')
+            .where('uid', isEqualTo: uid)
+            .where('postSellerUid', isEqualTo: widget.postSellerUid)
+            .where('postName', isEqualTo: widget.postName)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          setState(() {
+            isFavorited = true;
+            favoriteDocId = querySnapshot.docs.first.id;
+          });
+        } else {
+          setState(() {
+            isFavorited = false;
+            favoriteDocId = null;
+          });
+        }
+      }
+    } catch (e) {
+      print('Error checking favorites: $e');
+    }
+  }
+
   Future<void> saveToFavorites(BuildContext context) async {
     try {
-      CollectionReference favoritesCollection =
-          FirebaseFirestore.instance.collection('favorites');
-
       String? uid = FirebaseAuth.instance.currentUser?.uid;
-
-      await favoritesCollection.add({
+      DocumentReference docRef =
+          await FirebaseFirestore.instance.collection('favorites').add({
         'uid': uid,
-        'postSellerUid': postSellerUid,
-        'postName': postName,
-        'postImage': postImage,
-        'postPetName': postPetName,
-        'postType': postType,
-        'postDescription': postDescription,
+        'postSellerUid': widget.postSellerUid,
+        'postName': widget.postName,
+        'postImage': widget.postImage,
+        'postPetName': widget.postPetName,
+        'postType': widget.postType,
+        'postDescription': widget.postDescription,
         'timestamp': FieldValue.serverTimestamp(),
+      });
+
+      setState(() {
+        isFavorited = true;
+        favoriteDocId = docRef.id;
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -57,13 +102,34 @@ class AdoptersPostDetails extends StatefulWidget {
     }
   }
 
-  @override
-  _AdoptersPostDetailsState createState() => _AdoptersPostDetailsState();
-}
+  Future<void> removeFromFavorites(BuildContext context) async {
+    try {
+      if (favoriteDocId != null) {
+        await FirebaseFirestore.instance
+            .collection('favorites')
+            .doc(favoriteDocId)
+            .delete();
 
-class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
-  bool isFavorited = false;
-  bool showBookingForm = false;
+        setState(() {
+          isFavorited = false;
+          favoriteDocId = null;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Removed from Favorites'),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error removing from favorites: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to remove from favorites: $e'),
+        ),
+      );
+    }
+  }
 
   void contactSeller(BuildContext context) async {
     try {
@@ -209,24 +275,12 @@ class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
             iconSize: 30,
             color: isFavorited ? Colors.yellow[800] : Colors.grey,
             icon: const Icon(Icons.star),
-            onPressed: () {
-              setState(() {
-                isFavorited = !isFavorited;
-              });
-
+            onPressed: () async {
               if (isFavorited) {
-                widget.saveToFavorites(context);
+                await removeFromFavorites(context);
+              } else {
+                await saveToFavorites(context);
               }
-
-              String message =
-                  isFavorited ? 'Added to Favorites' : 'Removed from Favorites';
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(message),
-                  duration: const Duration(seconds: 2),
-                ),
-              );
             },
           ),
           if (widget.postType == 'Pet Adoption')

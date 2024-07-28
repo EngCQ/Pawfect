@@ -8,7 +8,7 @@ import 'default/adopters_design.dart';
 import 'default/adopters_navigation_bar.dart';
 
 class AdoptersFavourite extends StatelessWidget {
-  const AdoptersFavourite({Key? key});
+  const AdoptersFavourite({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +20,12 @@ class AdoptersFavourite extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
-          return StreamBuilder(
-            stream:
-                FirebaseFirestore.instance.collection('favorites').snapshots(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          return StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('favorites')
+                .where('uid', isEqualTo: provider.userDetails!['uid'])
+                .snapshots(),
+            builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
@@ -32,11 +34,7 @@ class AdoptersFavourite extends StatelessWidget {
                 return Center(child: Text('Error: ${snapshot.error}'));
               }
 
-              List<DocumentSnapshot> documents =
-                  snapshot.data!.docs.where((doc) {
-                Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-                return data['uid'] == provider.userDetails!['uid'];
-              }).toList();
+              List<DocumentSnapshot> documents = snapshot.data!.docs;
 
               if (documents.isEmpty) {
                 return Center(

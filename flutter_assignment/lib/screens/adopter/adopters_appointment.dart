@@ -64,15 +64,19 @@ class AdoptersAppointment extends StatelessWidget {
                       itemBuilder: (context, index) {
                         Map<String, dynamic> data =
                             documents[index].data() as Map<String, dynamic>;
+                        DateTime appointmentDate = data['date'].toDate();
+                        bool isPast = appointmentDate.isBefore(DateTime.now());
+
                         return Booking(
                           image: data['postImage'] ?? '',
                           name: data['postName'] ?? '',
-                          date: data['date'].toDate().toString().split(' ')[0],
+                          date: appointmentDate.toString().split(' ')[0],
                           time: data['time'] ?? '',
                           phoneNumber: data['phoneNumber'] ?? '',
                           notes: data['notes'] ?? '',
                           postType: data['postType'] ?? '',
                           postDescription: data['postDescription'] ?? '',
+                          cardColor: isPast ? Colors.red : Colors.green,
                         );
                       },
                     ),

@@ -12,6 +12,7 @@ class Booking extends StatelessWidget {
     required this.notes,
     required this.postType,
     required this.postDescription,
+    required this.cardColor,
   });
 
   final String image;
@@ -22,10 +23,12 @@ class Booking extends StatelessWidget {
   final String notes;
   final String postType;
   final String postDescription;
+  final Color cardColor;
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: cardColor,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       child: ListTile(
         leading: image.isNotEmpty
