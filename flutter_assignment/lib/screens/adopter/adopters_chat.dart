@@ -27,7 +27,8 @@ class _AdoptersChatState extends State<AdoptersChat> {
   @override
   void initState() {
     super.initState();
-    saveTokenToDatabase(currentUser!.uid);
+    // Optionally, you can handle token updates or FCM registration here
+    // e.g., saveTokenToDatabase(currentUser!.uid);
   }
 
   void sendMessage() async {
@@ -67,22 +68,11 @@ class _AdoptersChatState extends State<AdoptersChat> {
         },
       };
 
-      // Send the notification
-      await FirebaseFirestore.instance
-          .collection('notifications')
-          .add(notification);
-    }
-  }
-
-  Future<void> saveTokenToDatabase(String userId) async {
-    String? token = await FirebaseMessaging.instance.getToken();
-
-    if (token != null) {
-      var tokens = FirebaseFirestore.instance.collection('users').doc(userId);
-
-      await tokens.set({
-        'fcmToken': token,
-      });
+      // Send the notification directly via FCM
+      await FirebaseMessaging.instance.sendMessage(
+        to: token,
+        // notification: notification['notification'],
+      );
     }
   }
 
