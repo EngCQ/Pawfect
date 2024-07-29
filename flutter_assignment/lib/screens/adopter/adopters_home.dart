@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'components/home_post.dart';
 import 'default/adopters_default_header.dart';
 import 'default/adopters_navigation_bar.dart';
+import 'package:flutter_assignment/main.dart';
 
 class AdoptersHome extends StatelessWidget {
   const AdoptersHome({super.key});
@@ -15,6 +16,27 @@ class AdoptersHome extends StatelessWidget {
       print("Error fetching image URL: $e");
       throw e;
     }
+  }
+
+  void _showNotification(String title, String body) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'your_channel_id',
+      'your_channel_name',
+      channelDescription: 'your_channel_description',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: false,
+    );
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platformChannelSpecifics,
+      payload: 'item x',
+    );
   }
 
   @override

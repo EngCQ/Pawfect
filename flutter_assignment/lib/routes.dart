@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_filter.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_help.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_notification.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_post_details.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_reminder.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_booking_details.dart';
 import 'package:flutter_assignment/screens/auth/sign_in_screen.dart';
 import 'package:flutter_assignment/screens/auth/sign_up_screen.dart';
@@ -38,6 +40,8 @@ class AppRoutes {
   static const String adopterBookingDetails = '/AdoptersBookingDetails';
   static const String adopterNotification = '/notification';
   static const String adopterFilter = '/filter';
+  static const String adopterReminder = '/reminder';
+  static const String adopterHelp = '/help';
 
   //Admin
   static const String adminDashboard = '/adminDashboard';
@@ -123,6 +127,10 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => AdoptersNotification());
       case adopterFilter:
         return MaterialPageRoute(builder: (_) => AdoptersFilter());
+      case adopterReminder:
+        return MaterialPageRoute(builder: (_) => AdoptersReminder());
+      case adopterHelp:
+        return MaterialPageRoute(builder: (_) => AdoptersHelp());
 
       default:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
