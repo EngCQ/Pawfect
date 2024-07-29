@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class BookingFormOverlay extends StatefulWidget {
   final VoidCallback onClose;
@@ -94,7 +95,11 @@ class _BookingFormOverlayState extends State<BookingFormOverlay> {
 
         String? uid = FirebaseAuth.instance.currentUser?.uid;
 
-        await bookingsCollection.add({
+        DocumentReference newBookingRef =
+            bookingsCollection.doc(); // Generate a new document reference
+        String bookingId = newBookingRef.id; // Get the generated document ID
+
+        await newBookingRef.set({
           'uid': uid,
           'postName': widget.postName,
           'postImage': widget.postImage,
@@ -106,6 +111,7 @@ class _BookingFormOverlayState extends State<BookingFormOverlay> {
           'time': _selectedTime?.format(context),
           'notes': _notesController.text,
           'timestamp': FieldValue.serverTimestamp(),
+          'bookingId': bookingId, // Save the booking ID in the document
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -157,8 +163,7 @@ class _BookingFormOverlayState extends State<BookingFormOverlay> {
                     onPressed: () => _selectDate(context),
                     child: Text(_selectedDate == null
                         ? 'Select Date'
-                        : 'Selected Date: ${_selectedDate!.toLocal()}'
-                            .split(' ')[0]),
+                        : 'Selected Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate!)}'),
                   ),
                   if (_selectedDate == null)
                     Text(
@@ -205,23 +210,23 @@ class _BookingFormOverlayState extends State<BookingFormOverlay> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
-                        onPressed: _saveBooking,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                        ),
-                        child: const Text(
-                          'Submit',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      ElevatedButton(
                         onPressed: widget.onClose,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
                         ),
                         child: const Text(
                           'Cancel',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: _saveBooking,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                        ),
+                        child: const Text(
+                          'Submit',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

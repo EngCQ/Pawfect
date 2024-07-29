@@ -28,13 +28,20 @@ class AdoptersProfile extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.email),
+            title: Text("Name"),
+            subtitle: Text("name"),
+            trailing: Icon(Icons.edit),
+          ),
+          SizedBox(height: 16),
+          ListTile(
+            leading: Icon(Icons.email),
             title: Text("Email"),
             subtitle: Text("example@gmail.com"),
             trailing: Icon(Icons.edit),
           ),
           SizedBox(height: 16),
           ListTile(
-            leading: Icon(Icons.notifications),
+            leading: Icon(Icons.alarm_on),
             title: Text('Reminders'),
             trailing: Icon(Icons.arrow_forward),
             onTap: () {

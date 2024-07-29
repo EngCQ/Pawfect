@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_back_header.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_design.dart';
@@ -12,6 +13,7 @@ class AdoptersBookingDetails extends StatelessWidget {
   final String time;
   final String phoneNumber;
   final String notes;
+  final String bookingId; // Field to identify the booking record
 
   const AdoptersBookingDetails({
     Key? key,
@@ -24,7 +26,57 @@ class AdoptersBookingDetails extends StatelessWidget {
     required this.time,
     required this.phoneNumber,
     required this.notes,
+    required this.bookingId,
   }) : super(key: key);
+
+  Future<void> deleteBooking(BuildContext context) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('bookings')
+          .doc(bookingId)
+          .delete();
+      Navigator.pop(context); // Go back to the previous screen
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Booking deleted successfully'),
+        ),
+      );
+    } catch (e) {
+      print('Error deleting booking: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to delete booking: $e'),
+        ),
+      );
+    }
+  }
+
+  void showDeleteConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Confirmation'),
+          content: const Text('Are you sure you want to delete this booking?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                deleteBooking(context); // Delete the booking
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,33 +153,43 @@ class AdoptersBookingDetails extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   Text(
                     'Date: $date',
                     style: TextStyle(
-                      fontSize: Design.descriptionTitleSize,
+                      fontSize: Design.descriptionDetailSize,
                       color: Colors.white,
                     ),
                   ),
                   Text(
                     'Time: $time',
                     style: TextStyle(
-                      fontSize: Design.descriptionTitleSize,
+                      fontSize: Design.descriptionDetailSize,
                       color: Colors.white,
                     ),
                   ),
                   Text(
                     'Phone: $phoneNumber',
                     style: TextStyle(
-                      fontSize: Design.descriptionTitleSize,
+                      fontSize: Design.descriptionDetailSize,
                       color: Colors.white,
                     ),
                   ),
                   Text(
                     'Notes: $notes',
                     style: TextStyle(
-                      fontSize: Design.descriptionTitleSize,
+                      fontSize: Design.descriptionDetailSize,
                       color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () => showDeleteConfirmationDialog(context),
+                      style: ElevatedButton.styleFrom(
+                        iconColor: Colors.blue,
+                      ),
+                      child: const Text('Delete Booking'),
                     ),
                   ),
                 ],

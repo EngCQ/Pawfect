@@ -121,6 +121,7 @@ class AppRoutes {
             time: args['time'],
             phoneNumber: args['phoneNumber'],
             notes: args['notes'],
+            bookingId: args['bookingId'],
           ),
         );
       case adopterNotification:

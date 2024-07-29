@@ -10,7 +10,7 @@ class Design {
 
 //post
   static double descriptionTitleSize = 20;
-  static double descriptionDetailSize = 15;
+  static double descriptionDetailSize = 17;
   static double descriptionDetailTopPadding = 5;
 
   static double filterTitle = 20;

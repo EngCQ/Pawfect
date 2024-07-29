@@ -268,72 +268,95 @@ class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
             ),
         ],
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          IconButton(
-            iconSize: 30,
-            color: isFavorited ? Colors.yellow[800] : Colors.grey,
-            icon: const Icon(Icons.star),
-            onPressed: () async {
-              if (isFavorited) {
-                await removeFromFavorites(context);
-              } else {
-                await saveToFavorites(context);
-              }
-            },
-          ),
-          if (widget.postType == 'Pet Adoption')
-            SizedBox(
-              height: 40,
-              width: 180,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  backgroundColor: Colors.blue,
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context)
+                .viewInsets
+                .bottom), // This helps to prevent overlap
+        child: Stack(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  iconSize: 30,
+                  color: isFavorited ? Colors.yellow[800] : Colors.grey,
+                  icon: const Icon(Icons.star),
+                  onPressed: showBookingForm
+                      ? null
+                      : () async {
+                          if (isFavorited) {
+                            await removeFromFavorites(context);
+                          } else {
+                            await saveToFavorites(context);
+                          }
+                        },
                 ),
-                onPressed: () {
-                  setState(() {
-                    showBookingForm = true;
-                  });
-                },
-                child: const Text(
-                  "Book",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                if (widget.postType == 'Pet Adoption')
+                  SizedBox(
+                    height: 40,
+                    width: 180,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        backgroundColor: Colors.blue,
+                      ),
+                      onPressed: showBookingForm
+                          ? null
+                          : () {
+                              setState(() {
+                                showBookingForm = true;
+                              });
+                            },
+                      child: const Text(
+                        "Book",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
+                if (widget.postType != 'Pet Adoption')
+                  SizedBox(
+                    height: 40,
+                    width: 180,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        backgroundColor: Colors.red,
+                      ),
+                      onPressed: showBookingForm
+                          ? null
+                          : () {
+                              contactSeller(context);
+                            },
+                      child: const Text(
+                        "Contact",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            if (showBookingForm)
+              Positioned.fill(
+                left: 400,
+                child: Container(
+                  color: Colors.black.withOpacity(0.5),
                 ),
               ),
-            ),
-          if (widget.postType != 'Pet Adoption')
-            SizedBox(
-              height: 40,
-              width: 180,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  backgroundColor: Colors.red,
-                ),
-                onPressed: () {
-                  contactSeller(context);
-                },
-                child: const Text(
-                  "Contact",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

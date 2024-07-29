@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:intl/intl.dart';
 
 class AdoptersChat extends StatefulWidget {
@@ -21,16 +22,22 @@ class AdoptersChat extends StatefulWidget {
 
 class _AdoptersChatState extends State<AdoptersChat> {
   final currentUser = FirebaseAuth.instance.currentUser;
-  final TextEditingController messageController = TextEditingController();
+  TextEditingController messageController = TextEditingController();
 
-  void sendMessage() {
+  @override
+  void initState() {
+    super.initState();
+    saveTokenToDatabase(currentUser!.uid);
+  }
+
+  void sendMessage() async {
     if (messageController.text.trim().isEmpty) return;
 
     String chatId = currentUser!.uid.hashCode <= widget.userId.hashCode
         ? '${currentUser!.uid}_${widget.userId}'
         : '${widget.userId}_${currentUser!.uid}';
 
-    FirebaseFirestore.instance.collection('messages').add({
+    await FirebaseFirestore.instance.collection('messages').add({
       'chatId': chatId,
       'senderId': currentUser!.uid,
       'receiverId': widget.userId,
@@ -38,8 +45,45 @@ class _AdoptersChatState extends State<AdoptersChat> {
       'message': messageController.text,
       'isRead': false,
     });
-
     messageController.clear();
+    await sendPushNotification(widget.userId, messageController.text);
+  }
+
+  Future<void> sendPushNotification(String receiverId, String message) async {
+    // Fetch the receiver's FCM token from Firestore
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(receiverId)
+        .get();
+    String? token = userDoc['fcmToken'];
+
+    if (token != null) {
+      // Construct the notification payload
+      Map<String, dynamic> notification = {
+        'to': token,
+        'notification': {
+          'title': 'New message from ${currentUser!.displayName}',
+          'body': message,
+        },
+      };
+
+      // Send the notification
+      await FirebaseFirestore.instance
+          .collection('notifications')
+          .add(notification);
+    }
+  }
+
+  Future<void> saveTokenToDatabase(String userId) async {
+    String? token = await FirebaseMessaging.instance.getToken();
+
+    if (token != null) {
+      var tokens = FirebaseFirestore.instance.collection('users').doc(userId);
+
+      await tokens.set({
+        'fcmToken': token,
+      });
+    }
   }
 
   @override
