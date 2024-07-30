@@ -42,6 +42,12 @@ class AdoptersHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+    final searchText = args?['searchText'] ?? '';
+    final searchAdoption = args?['searchAdoption'] ?? true;
+    final searchMissing = args?['searchMissing'] ?? true;
+
     return Scaffold(
       appBar: const DefaultHeader(),
       body: StreamBuilder<QuerySnapshot>(
@@ -58,7 +64,18 @@ class AdoptersHome extends StatelessWidget {
             return const Center(child: Text('No posts available'));
           }
 
-          final posts = snapshot.data!.docs;
+          final posts = snapshot.data!.docs.where((post) {
+            final postType = post['type'];
+            final postUserName = post['userName'];
+
+            final matchesSearchText =
+                searchText.isEmpty || postUserName.contains(searchText);
+            final matchesAdoption =
+                searchAdoption && postType == 'Pet Adoption';
+            final matchesMissing = searchMissing && postType == 'Missing Pet';
+
+            return matchesSearchText && (matchesAdoption || matchesMissing);
+          }).toList();
 
           return ListView.builder(
             itemCount: posts.length,

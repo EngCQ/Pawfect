@@ -30,7 +30,7 @@ class AppRoutes {
   static const String signUp = '/signUp';
   static const String sellerDashboard = '/sellerDashboard';
 
-  //Adopter
+  // Adopter
   static const String adopterDashboard = '/AdoptersHome';
   static const String adopterFavourite = '/AdoptersFavourite';
   static const String adopterAppointment = '/AdoptersAppointment';
@@ -43,7 +43,7 @@ class AppRoutes {
   static const String adopterReminder = '/reminder';
   static const String adopterHelp = '/help';
 
-  //Admin
+  // Admin
   static const String adminDashboard = '/adminDashboard';
   static const String adminUserManagement = '/adminUserManagement';
   static const String adminAddUser = '/adminAddUser';
@@ -86,7 +86,8 @@ class AppRoutes {
       case adminAppoManagement:
         return MaterialPageRoute(builder: (_) => const AdminAppoManagement());
       case adopterDashboard:
-        return MaterialPageRoute(builder: (_) => const AdoptersHome());
+        return MaterialPageRoute(
+            builder: (_) => const AdoptersHome(), settings: settings);
       case adopterFavourite:
         return MaterialPageRoute(builder: (_) => AdoptersFavourite());
       case adopterAppointment:

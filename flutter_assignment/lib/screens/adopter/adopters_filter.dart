@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_assignment/providers/user_provider.dart';
 import 'package:flutter_assignment/routes.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_app_color.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_back_header.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_design.dart';
-import 'package:provider/provider.dart';
 
 class AdoptersFilter extends StatefulWidget {
   const AdoptersFilter({Key? key}) : super(key: key);
@@ -86,17 +84,19 @@ class _AdoptersFilterState extends State<AdoptersFilter> {
                 height: 50, // Set the desired height
                 child: ElevatedButton(
                   onPressed: () {
-                    String searchAdoption = "";
-                    String searchMissing = "";
                     String searchText = _searchController.text;
-                    if (adoptionChecked) {
-                      searchAdoption = "Pet Adoption";
-                    }
-                    if (missingChecked) {
-                      searchMissing = "Missing Pet";
-                    }
+                    bool searchAdoption = adoptionChecked;
+                    bool searchMissing = missingChecked;
+
                     Navigator.pushReplacementNamed(
-                        context, AppRoutes.adopterDashboard);
+                      context,
+                      AppRoutes.adopterDashboard,
+                      arguments: {
+                        'searchText': searchText,
+                        'searchAdoption': searchAdoption,
+                        'searchMissing': searchMissing,
+                      },
+                    );
                   },
                   child: const Text('Save'),
                   style: ElevatedButton.styleFrom(
