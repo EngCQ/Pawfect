@@ -67,25 +67,57 @@ class _AdoptersChatListState extends State<AdoptersChatList> {
                     var fullName = user['fullName'] ?? 'Unknown';
                     var isOnline = user['isOnline'] ?? false;
                     var image = user['profileImage'] ?? '';
+                    var userId = user.id;
 
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage:
-                            image.isNotEmpty ? NetworkImage(image) : null,
-                        child: image.isEmpty ? Icon(Icons.person) : null,
-                      ),
-                      title: Text(fullName),
-                      subtitle: Text(isOnline ? 'Online' : 'Offline'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AdoptersChat(
-                              userId: user.id,
-                              userName: fullName,
-                              userImage: image,
-                            ),
+                    return FutureBuilder<bool>(
+                      future: _hasUnreadMessages(userId),
+                      builder: (context, snapshot) {
+                        bool hasUnreadMessages = snapshot.data ?? false;
+
+                        return ListTile(
+                          leading: Stack(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: image.isNotEmpty
+                                    ? NetworkImage(image)
+                                    : null,
+                                child:
+                                    image.isEmpty ? Icon(Icons.person) : null,
+                              ),
+                              if (hasUnreadMessages)
+                                Positioned(
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
+                          title: Text(fullName),
+                          subtitle: Text(isOnline ? 'Online' : 'Offline'),
+                          onTap: () async {
+                            // Mark messages as read
+                            await _markMessagesAsRead(userId);
+                            // Mark notifications as read
+                            await _markNotificationsAsRead(userId);
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AdoptersChat(
+                                  userId: userId,
+                                  userName: fullName,
+                                  userImage: image,
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
                     );
@@ -98,5 +130,66 @@ class _AdoptersChatListState extends State<AdoptersChatList> {
       ),
       bottomNavigationBar: AdoptersNavigationBar(),
     );
+  }
+
+  Future<bool> _hasUnreadMessages(String userId) async {
+    if (currentUser == null) return false;
+
+    String chatId = currentUser!.uid.hashCode <= userId.hashCode
+        ? '${currentUser!.uid}_${userId}'
+        : '${userId}_${currentUser!.uid}';
+
+    var messageQuery = await FirebaseFirestore.instance
+        .collection('messages')
+        .where('chatId', isEqualTo: chatId)
+        .where('isRead', isEqualTo: false)
+        .where('receiverId', isEqualTo: currentUser!.uid)
+        .get();
+
+    return messageQuery.docs.isNotEmpty;
+  }
+
+  Future<void> _markMessagesAsRead(String userId) async {
+    if (currentUser == null) return;
+
+    String chatId = currentUser!.uid.hashCode <= userId.hashCode
+        ? '${currentUser!.uid}_${userId}'
+        : '${userId}_${currentUser!.uid}';
+
+    var messageQuery = await FirebaseFirestore.instance
+        .collection('messages')
+        .where('chatId', isEqualTo: chatId)
+        .where('isRead', isEqualTo: false)
+        .where('receiverId', isEqualTo: currentUser!.uid)
+        .get();
+
+    for (var doc in messageQuery.docs) {
+      await FirebaseFirestore.instance
+          .collection('messages')
+          .doc(doc.id)
+          .update({
+        'isRead': true,
+      });
+    }
+  }
+
+  Future<void> _markNotificationsAsRead(String userId) async {
+    if (currentUser == null) return;
+
+    var notificationQuery = await FirebaseFirestore.instance
+        .collection('notifications')
+        .where('receiverId', isEqualTo: currentUser!.uid)
+        .where('senderId', isEqualTo: userId)
+        .where('isRead', isEqualTo: false)
+        .get();
+
+    for (var doc in notificationQuery.docs) {
+      await FirebaseFirestore.instance
+          .collection('notifications')
+          .doc(doc.id)
+          .update({
+        'isRead': true,
+      });
+    }
   }
 }
