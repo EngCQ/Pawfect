@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_chat.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_filter.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_help.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_notification.dart';
@@ -42,6 +43,7 @@ class AppRoutes {
   static const String adopterFilter = '/filter';
   static const String adopterReminder = '/reminder';
   static const String adopterHelp = '/help';
+  static const String adopterChat = '/AdoptersChat';
 
   // Admin
   static const String adminDashboard = '/adminDashboard';
@@ -95,7 +97,7 @@ class AppRoutes {
       case adopterChatList:
         return MaterialPageRoute(builder: (_) => AdoptersChatList());
       case adopterProfile:
-        return MaterialPageRoute(builder: (_) => const AdoptersProfile());
+        return MaterialPageRoute(builder: (_) => AdoptersProfile());
       case adopterPostDetails:
         final detailsArgs = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
@@ -133,6 +135,15 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => AdoptersReminder());
       case adopterHelp:
         return MaterialPageRoute(builder: (_) => AdoptersHelp());
+      case adopterChat:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => AdoptersChat(
+            userId: args['userId'],
+            userName: args['userName'],
+            userImage: args['userImage'],
+          ),
+        );
 
       default:
         return MaterialPageRoute(builder: (_) => const SplashScreen());

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:intl/intl.dart';
 
 class AdoptersChat extends StatefulWidget {
@@ -27,57 +26,76 @@ class _AdoptersChatState extends State<AdoptersChat> {
   @override
   void initState() {
     super.initState();
-    // Optionally, you can handle token updates or FCM registration here
-    // e.g., saveTokenToDatabase(currentUser!.uid);
   }
 
-  void sendMessage() async {
+  Future<void> sendMessage() async {
     if (messageController.text.trim().isEmpty) return;
+
+    if (currentUser == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('User is not logged in')),
+      );
+      return;
+    }
 
     String chatId = currentUser!.uid.hashCode <= widget.userId.hashCode
         ? '${currentUser!.uid}_${widget.userId}'
         : '${widget.userId}_${currentUser!.uid}';
 
-    await FirebaseFirestore.instance.collection('messages').add({
-      'chatId': chatId,
-      'senderId': currentUser!.uid,
-      'receiverId': widget.userId,
-      'timestamp': FieldValue.serverTimestamp(),
-      'message': messageController.text,
-      'isRead': false,
-    });
-    messageController.clear();
-    await sendPushNotification(widget.userId, messageController.text);
-  }
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser!.uid)
+          .get();
 
-  Future<void> sendPushNotification(String receiverId, String message) async {
-    // Fetch the receiver's FCM token from Firestore
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(receiverId)
-        .get();
-    String? token = userDoc['fcmToken'];
+      if (!userDoc.exists) {
+        print('User document does not exist');
+        return;
+      }
 
-    if (token != null) {
-      // Construct the notification payload
-      Map<String, dynamic> notification = {
-        'to': token,
-        'notification': {
-          'title': 'New message from ${currentUser!.displayName}',
-          'body': message,
-        },
-      };
+      String senderName = userDoc['fullName'] ?? 'Anonymous';
 
-      // Send the notification directly via FCM
-      await FirebaseMessaging.instance.sendMessage(
-        to: token,
-        // notification: notification['notification'],
+      await FirebaseFirestore.instance.collection('messages').add({
+        'chatId': chatId,
+        'senderId': currentUser!.uid,
+        'receiverId': widget.userId,
+        'timestamp': FieldValue.serverTimestamp(),
+        'message': messageController.text,
+        'isRead': false,
+      });
+
+      await FirebaseFirestore.instance.collection('notifications').add({
+        'receiverId': widget.userId,
+        'senderId': currentUser!.uid,
+        'senderName': senderName,
+        'message': messageController.text,
+        'timestamp': FieldValue.serverTimestamp(),
+        'chatId': chatId,
+        'isRead': false,
+      });
+
+      messageController.clear();
+    } catch (e) {
+      print('Error sending message: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error sending message: $e')),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (currentUser == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Error'),
+        ),
+        body: Center(
+          child: Text('User is not logged in'),
+        ),
+      );
+    }
+
     String chatId = currentUser!.uid.hashCode <= widget.userId.hashCode
         ? '${currentUser!.uid}_${widget.userId}'
         : '${widget.userId}_${currentUser!.uid}';
@@ -109,13 +127,13 @@ class _AdoptersChatState extends State<AdoptersChat> {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Center(child: Text('No messages'));
+                  return const Center(child: Text('No messages'));
                 }
 
                 var messages = snapshot.data!.docs;
@@ -190,6 +208,8 @@ class _AdoptersChatState extends State<AdoptersChat> {
                     ),
                   ),
                 ),
+                SizedBox(
+                    width: 8.0), // Add spacing between TextField and IconButton
                 IconButton(
                   icon: Icon(Icons.send),
                   onPressed: sendMessage,
