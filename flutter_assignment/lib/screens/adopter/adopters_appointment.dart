@@ -68,6 +68,7 @@ class AdoptersAppointment extends StatelessWidget {
                         bool isPast = appointmentDate.isBefore(DateTime.now());
 
                         return Booking(
+                          bookingId: documents[index].id, // Pass bookingId
                           image: data['postImage'] ?? '',
                           name: data['postName'] ?? '',
                           date: appointmentDate.toString().split(' ')[0],

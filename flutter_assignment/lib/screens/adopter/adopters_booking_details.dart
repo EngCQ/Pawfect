@@ -1,5 +1,9 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_assignment/routes.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_back_header.dart';
 import 'package:flutter_assignment/screens/adopter/default/adopters_design.dart';
 
@@ -35,7 +39,7 @@ class AdoptersBookingDetails extends StatelessWidget {
           .collection('bookings')
           .doc(bookingId)
           .delete();
-      Navigator.pop(context); // Go back to the previous screen
+      Navigator.pushReplacementNamed(context, AppRoutes.adopterAppointment);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Booking deleted successfully'),
@@ -92,7 +96,9 @@ class AdoptersBookingDetails extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(postImage),
+                        image: postImage.isNotEmpty
+                            ? NetworkImage(postImage)
+                            : const AssetImage('assets/default_image.png'),
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -147,7 +153,9 @@ class AdoptersBookingDetails extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    postDescription,
+                    postDescription.isNotEmpty
+                        ? postDescription
+                        : 'No description provided.',
                     style: TextStyle(
                       fontSize: Design.descriptionDetailSize,
                       color: Colors.white,
@@ -176,7 +184,7 @@ class AdoptersBookingDetails extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Notes: $notes',
+                    'Notes: ${notes.isNotEmpty ? notes : 'No additional notes.'}',
                     style: TextStyle(
                       fontSize: Design.descriptionDetailSize,
                       color: Colors.white,
@@ -186,10 +194,12 @@ class AdoptersBookingDetails extends StatelessWidget {
                   Center(
                     child: ElevatedButton(
                       onPressed: () => showDeleteConfirmationDialog(context),
-                      style: ElevatedButton.styleFrom(
-                        iconColor: Colors.blue,
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      child: const Text(
+                        'Delete Booking',
+                        style: TextStyle(color: Colors.black),
                       ),
-                      child: const Text('Delete Booking'),
                     ),
                   ),
                 ],

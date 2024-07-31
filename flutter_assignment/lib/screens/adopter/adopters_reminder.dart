@@ -222,9 +222,9 @@ class _AdoptersReminderState extends State<AdoptersReminder> {
       body: ListView(
         padding: EdgeInsets.all(16.0),
         children: [
-          Text("Reminders",
+          const Text("Reminders",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           _buildReminderContainer('Feeding'),
           _buildReminderContainer('Pet Walking'),
           _buildReminderContainer('Pet Health Check'),

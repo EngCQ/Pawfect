@@ -5,7 +5,7 @@ import 'package:flutter_assignment/screens/adopter/adopters_help.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_notification.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_post_details.dart';
 import 'package:flutter_assignment/screens/adopter/adopters_reminder.dart';
-import 'package:flutter_assignment/screens/adopter/default/adopters_booking_details.dart';
+import 'package:flutter_assignment/screens/adopter/adopters_booking_details.dart';
 import 'package:flutter_assignment/screens/auth/sign_in_screen.dart';
 import 'package:flutter_assignment/screens/auth/sign_up_screen.dart';
 import 'package:flutter_assignment/screens/common/splash_screen.dart';

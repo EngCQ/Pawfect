@@ -4,6 +4,7 @@ import 'package:flutter_assignment/routes.dart';
 class Booking extends StatelessWidget {
   const Booking({
     super.key,
+    required this.bookingId,
     required this.image,
     required this.name,
     required this.date,
@@ -15,6 +16,7 @@ class Booking extends StatelessWidget {
     required this.cardColor,
   });
 
+  final String bookingId; // Add bookingId field
   final String image;
   final String name;
   final String date;
@@ -49,6 +51,7 @@ class Booking extends StatelessWidget {
             context,
             AppRoutes.adopterBookingDetails,
             arguments: {
+              'bookingId': bookingId,
               'postName': name,
               'postImage': image,
               'postPetName': name,
