@@ -17,6 +17,23 @@ class _AdoptersChatListState extends State<AdoptersChatList> {
   final currentUser = FirebaseAuth.instance.currentUser;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {}); // Trigger a rebuild to refresh unread status
+  }
+
+  @override
+  void didUpdateWidget(AdoptersChatList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    setState(() {}); // Trigger a rebuild to refresh unread status
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DefaultHeader(),
@@ -116,7 +133,10 @@ class _AdoptersChatListState extends State<AdoptersChatList> {
                                   userImage: image,
                                 ),
                               ),
-                            );
+                            ).then((_) {
+                              // Refresh the list when coming back from chat screen
+                              setState(() {});
+                            });
                           },
                         );
                       },
