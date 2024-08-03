@@ -2,44 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'providers/theme_provider.dart';
-import 'providers/user_provider.dart'; // Import the UserProvider
+import 'providers/user_provider.dart';
 import 'routes.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  // Handle background message
-  print('Handling a background message: ${message.messageId}');
-}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-  // final IOSInitializationSettings initializationSettingsIOS =
-  //     IOSInitializationSettings();
-
-  const InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-    // iOS: initializationSettingsIOS,
-  );
-
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(
-            create: (_) => UserProvider()), // Add UserProvider
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: const MyApp(),
     ),
@@ -54,16 +29,22 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
   @override
   void initState() {
     super.initState();
-    _requestNotificationPermission();
+    _initializeApp();
+  }
+
+  Future<void> _initializeApp() async {
+    await _requestNotificationPermission();
+    await _getToken();
     _configureFirebaseListeners();
   }
 
-  void _requestNotificationPermission() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    await messaging.requestPermission(
+  Future<void> _requestNotificationPermission() async {
+    await _firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
       badge: true,
@@ -74,27 +55,22 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  Future<void> _getToken() async {
+    try {
+      String? fcmToken = await _firebaseMessaging.getToken();
+      print("FCM Token: $fcmToken");
+    } catch (e) {
+      print("Error getting FCM token: $e");
+    }
+  }
+
   void _configureFirebaseListeners() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
 
       if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: const AndroidNotificationDetails(
-              'default_channel_id', // Use your channel ID here
-              'default_channel_name', // Use your channel name here
-              // 'default_channel_description', // Use your channel description here
-              importance: Importance.max,
-              priority: Priority.high,
-              showWhen: false,
-            ),
-          ),
-        );
+        // Display notification
       }
     });
 
