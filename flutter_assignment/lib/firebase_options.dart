@@ -41,53 +41,48 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAN662QI2VbVfplDKmExwspG48yGxgD3Ek',
-    appId: '1:237338423708:web:5f091cd39264731e119859',
-    messagingSenderId: '237338423708',
-    projectId: 'basiciapp',
-    authDomain: 'basiciapp.firebaseapp.com',
-    databaseURL: 'https://basiciapp-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'basiciapp.appspot.com',
-    measurementId: 'G-DXD7069W5H',
+    apiKey: 'AIzaSyBgfY77mRO-hdIwZJrl5K7dKRSuEHY2R0E',
+    appId: '1:817792816547:web:4af85888f3d5c6fb16f616',
+    messagingSenderId: '817792816547',
+    projectId: 'assignment-b37de',
+    authDomain: 'assignment-b37de.firebaseapp.com',
+    storageBucket: 'assignment-b37de.appspot.com',
+    measurementId: 'G-HNGGPV7PXT',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyARRzjmyhvnQVbpjwlzjzKaKXyzIWk56zA',
-    appId: '1:237338423708:android:05cb1d278049e87c119859',
-    messagingSenderId: '237338423708',
-    projectId: 'basiciapp',
-    databaseURL: 'https://basiciapp-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'basiciapp.appspot.com',
+    apiKey: 'AIzaSyCs-BgxYfdonLHMU4H5sr5rCw-ky9rhlro',
+    appId: '1:817792816547:android:65b711bc88f82bb816f616',
+    messagingSenderId: '817792816547',
+    projectId: 'assignment-b37de',
+    storageBucket: 'assignment-b37de.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBt7GuSstQzU27evgDZ3HYV73zYdrdGj4c',
-    appId: '1:237338423708:ios:5b790d3468a6994a119859',
-    messagingSenderId: '237338423708',
-    projectId: 'basiciapp',
-    databaseURL: 'https://basiciapp-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'basiciapp.appspot.com',
-    iosBundleId: 'com.example.pawfect',
+    apiKey: 'AIzaSyAHsiYVmeiIT478Ov67wa-d16T3iFlGCy8',
+    appId: '1:817792816547:ios:84424bcd56edf96e16f616',
+    messagingSenderId: '817792816547',
+    projectId: 'assignment-b37de',
+    storageBucket: 'assignment-b37de.appspot.com',
+    iosBundleId: 'com.example.flutterAssignment',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBt7GuSstQzU27evgDZ3HYV73zYdrdGj4c',
-    appId: '1:237338423708:ios:5b790d3468a6994a119859',
-    messagingSenderId: '237338423708',
-    projectId: 'basiciapp',
-    databaseURL: 'https://basiciapp-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'basiciapp.appspot.com',
-    iosBundleId: 'com.example.pawfect',
+    apiKey: 'AIzaSyAHsiYVmeiIT478Ov67wa-d16T3iFlGCy8',
+    appId: '1:817792816547:ios:84424bcd56edf96e16f616',
+    messagingSenderId: '817792816547',
+    projectId: 'assignment-b37de',
+    storageBucket: 'assignment-b37de.appspot.com',
+    iosBundleId: 'com.example.flutterAssignment',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAN662QI2VbVfplDKmExwspG48yGxgD3Ek',
-    appId: '1:237338423708:web:4897c4c31d82c4ee119859',
-    messagingSenderId: '237338423708',
-    projectId: 'basiciapp',
-    authDomain: 'basiciapp.firebaseapp.com',
-    databaseURL: 'https://basiciapp-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'basiciapp.appspot.com',
-    measurementId: 'G-T3G2MDR4F0',
+    apiKey: 'AIzaSyBgfY77mRO-hdIwZJrl5K7dKRSuEHY2R0E',
+    appId: '1:817792816547:web:fb8aa6aa80fd1bd416f616',
+    messagingSenderId: '817792816547',
+    projectId: 'assignment-b37de',
+    authDomain: 'assignment-b37de.firebaseapp.com',
+    storageBucket: 'assignment-b37de.appspot.com',
+    measurementId: 'G-MPS7LQVSYL',
   );
 }

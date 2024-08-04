@@ -1,38 +1,42 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_assignment/screens/adopter/adopters_chat.dart';
-import 'package:flutter_assignment/screens/adopter/adopters_filter.dart';
-import 'package:flutter_assignment/screens/adopter/adopters_help.dart';
-import 'package:flutter_assignment/screens/adopter/adopters_notification.dart';
-import 'package:flutter_assignment/screens/adopter/adopters_post_details.dart';
-import 'package:flutter_assignment/screens/adopter/adopters_reminder.dart';
-import 'package:flutter_assignment/screens/adopter/adopters_booking_details.dart';
-import 'package:flutter_assignment/screens/auth/sign_in_screen.dart';
-import 'package:flutter_assignment/screens/auth/sign_up_screen.dart';
-import 'package:flutter_assignment/screens/common/splash_screen.dart';
-import 'package:flutter_assignment/screens/admin/admin_dashboard.dart';
-import 'package:flutter_assignment/screens/adopter/adopters_home.dart';
-import 'package:flutter_assignment/screens/adopter/adopters_favourite.dart';
-import 'package:flutter_assignment/screens/adopter/adopters_appointment.dart';
-import 'package:flutter_assignment/screens/adopter/adopters_chat_list.dart';
-import 'package:flutter_assignment/screens/adopter/adopters_profile.dart';
-import 'package:flutter_assignment/screens/seller/seller_dashboard.dart';
-import 'package:flutter_assignment/screens/admin/admin_user_management.dart';
-import 'package:flutter_assignment/screens/admin/admin_create_user.dart';
-import 'package:flutter_assignment/screens/admin/admin_pet_management.dart';
-import 'package:flutter_assignment/screens/admin/admin_select_seller_screen.dart';
-import 'package:flutter_assignment/screens/admin/admin_add_pet.dart';
-import 'package:flutter_assignment/screens/admin/admin_appo_management.dart';
-import 'package:flutter_assignment/screens/admin/admin_edit_user.dart';
+import 'views/splash_screen.dart';
+import 'views/sign_up_screen.dart';
+import 'views/sign_in_screen.dart';
+import 'views/admin/admin_dashboard.dart';
+import 'views/admin/admin_user_management.dart';
+import 'views/admin/admin_pet_management.dart';
+import 'views/admin/admin_add_pet.dart';
+
+//Adaptors
+import 'package:flutter_assignment/views/adopter/adopters_chat.dart';
+import 'package:flutter_assignment/views/adopter/adopters_filter.dart';
+import 'package:flutter_assignment/views/adopter/adopters_help.dart';
+import 'package:flutter_assignment/views/adopter/adopters_notification.dart';
+import 'package:flutter_assignment/views/adopter/adopters_post_details.dart';
+import 'package:flutter_assignment/views/adopter/adopters_reminder.dart';
+import 'package:flutter_assignment/views/adopter/adopters_booking_details.dart';
+import 'package:flutter_assignment/views/adopter/adopters_home.dart';
+import 'package:flutter_assignment/views/adopter/adopters_favourite.dart';
+import 'package:flutter_assignment/views/adopter/adopters_appointment.dart';
+import 'package:flutter_assignment/views/adopter/adopters_chat_list.dart';
+import 'package:flutter_assignment/views/adopter/adopters_profile.dart';
+import 'package:flutter_assignment/views/adopter/adopters_edit_profile.dart';
+
+//Seller
+import 'views/seller/seller_dashboard.dart';
 
 class AppRoutes {
   static const String splashScreen = '/';
-  static const String signIn = '/signIn';
   static const String signUp = '/signUp';
-  static const String sellerDashboard = '/sellerDashboard';
+  static const String signIn = '/signIn';
+  static const String adminDashboard = '/adminDashboard';
+  static const String adminUserManagement = '/adminUserManagement';
+  static const String adminPetManagement = '/adminPetManagement';
+  static const String adminSelectSellerPet = '/adminSelectSellerPet';
+  static const String adminAddPet = '/adminAddPet';
 
-  // Adopter
-  static const String adopterDashboard = '/AdoptersHome';
+  //Adopter
+  static const String adopterDashboard = '/adopterDashboard';
   static const String adopterFavourite = '/AdoptersFavourite';
   static const String adopterAppointment = '/AdoptersAppointment';
   static const String adopterChatList = '/AdoptersChatList';
@@ -44,60 +48,48 @@ class AppRoutes {
   static const String adopterReminder = '/reminder';
   static const String adopterHelp = '/help';
   static const String adopterChat = '/AdoptersChat';
-
-  // Admin
-  static const String adminDashboard = '/adminDashboard';
-  static const String adminUserManagement = '/adminUserManagement';
-  static const String adminAddUser = '/adminAddUser';
-  static const String adminEditUser = '/adminEditUser';
-  static const String adminPetManagement = '/adminPetManagement';
-  static const String adminSelectSeller = '/adminSelectSeller';
-  static const String adminAddPet = '/AdminAddPet';
-  static const String adminAppoManagement = '/adminAppoManagement';
+  static const String adopterEditProfile = '/AdoptersEditProfile';
+  //Seller
+  static const String sellerDashboard = '/sellerDashboard';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case signIn:
-        return MaterialPageRoute(builder: (_) => const SignInScreen());
-      case signUp:
-        return MaterialPageRoute(builder: (_) => const SignUpScreen());
       case splashScreen:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
+      case signUp:
+        return MaterialPageRoute(builder: (_) => const SignUpScreen());
+      case signIn:
+        return MaterialPageRoute(builder: (_) => const SignInScreen());
+
       case adminDashboard:
         return MaterialPageRoute(builder: (_) => const AdminDashboard());
-      case sellerDashboard:
-        return MaterialPageRoute(builder: (_) => const SellerDashboard());
       case adminUserManagement:
         return MaterialPageRoute(builder: (_) => const AdminUserManagement());
-      case adminAddUser:
-        return MaterialPageRoute(builder: (_) => const AdminAddUser());
-      case adminEditUser:
-        final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(
-          builder: (_) => AdminEditUser(userId: args['userId']),
-        );
       case adminPetManagement:
         return MaterialPageRoute(builder: (_) => const AdminPetManagement());
-      case adminSelectSeller:
-        return MaterialPageRoute(builder: (_) => const SelectSellerScreen());
       case adminAddPet:
-        final args = settings.arguments as Map<String, dynamic>;
+        final sellerUid = settings.arguments as String;
         return MaterialPageRoute(
-          builder: (_) => AdminAddPet(sellerUid: args['sellerUid']),
+          builder: (_) => AdminAddPet(sellerUid: sellerUid),
         );
-      case adminAppoManagement:
-        return MaterialPageRoute(builder: (_) => const AdminAppoManagement());
+
+      //Adopter
       case adopterDashboard:
         return MaterialPageRoute(
             builder: (_) => const AdoptersHome(), settings: settings);
       case adopterFavourite:
-        return MaterialPageRoute(builder: (_) => AdoptersFavourite());
+        return MaterialPageRoute(builder: (_) => const AdoptersFavourite());
       case adopterAppointment:
         return MaterialPageRoute(builder: (_) => AdoptersAppointment());
       case adopterChatList:
-        return MaterialPageRoute(builder: (_) => AdoptersChatList());
+        return MaterialPageRoute(builder: (_) => const AdoptersChatList());
       case adopterProfile:
         return MaterialPageRoute(builder: (_) => AdoptersProfile());
+      case adopterEditProfile:
+        final args = settings.arguments as Map<String, dynamic>;
+        final userId = args['userId'] as String;
+        return MaterialPageRoute(
+            builder: (_) => AdopterEditProfile(userId: userId));
       case adopterPostDetails:
         final detailsArgs = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
@@ -133,11 +125,11 @@ class AppRoutes {
       case adopterNotification:
         return MaterialPageRoute(builder: (_) => AdoptersNotification());
       case adopterFilter:
-        return MaterialPageRoute(builder: (_) => AdoptersFilter());
+        return MaterialPageRoute(builder: (_) => const AdoptersFilter());
       case adopterReminder:
         return MaterialPageRoute(builder: (_) => AdoptersReminder());
       case adopterHelp:
-        return MaterialPageRoute(builder: (_) => AdoptersHelp());
+        return MaterialPageRoute(builder: (_) => const AdoptersHelp());
       case adopterChat:
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
@@ -148,8 +140,16 @@ class AppRoutes {
           ),
         );
 
+      //Seller
+      case sellerDashboard:
+        return MaterialPageRoute(builder: (_) => const SellerDashboard());
+
       default:
-        return MaterialPageRoute(builder: (_) => const SplashScreen());
+        return MaterialPageRoute(
+          builder: (_) => Scaffold(
+            body: Center(child: Text('No route defined for ${settings.name}')),
+          ),
+        );
     }
   }
 }

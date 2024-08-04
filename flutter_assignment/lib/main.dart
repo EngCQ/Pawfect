@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'providers/theme_provider.dart';
-import 'providers/user_provider.dart';
+import 'viewmodels/user_authentication.dart';
+import 'viewmodels/theme_provider.dart';
 import 'routes.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -13,8 +14,8 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => UserAuthentication()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: const MyApp(),
     ),
@@ -28,13 +29,20 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _initializeApp();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   Future<void> _initializeApp() async {
@@ -78,6 +86,18 @@ class _MyAppState extends State<MyApp> {
       print('A new onMessageOpenedApp event was published!');
       // Handle notification tap
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final userAuth = Provider.of<UserAuthentication>(context, listen: false);
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+      // Update isOnline status to false and set lastSeen to the current timestamp when the app is paused or detached
+      userAuth.updateOnlineStatus(false, FieldValue.serverTimestamp());
+    } else if (state == AppLifecycleState.resumed) {
+      // Update isOnline status to true when the app is resumed
+      userAuth.updateOnlineStatus(true, null);
+    }
   }
 
   @override
