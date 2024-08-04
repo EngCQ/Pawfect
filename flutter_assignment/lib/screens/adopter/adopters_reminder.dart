@@ -18,13 +18,13 @@ class _AdoptersReminderState extends State<AdoptersReminder> {
       context: context,
       builder: (BuildContext context) {
         List<String> repeatOptions = [
-          'Sunday',
           'Monday',
           'Tuesday',
           'Wednesday',
           'Thursday',
           'Friday',
-          'Saturday'
+          'Saturday',
+          'Sunday'
         ];
         List<bool> repeatSelected =
             List.generate(repeatOptions.length, (index) => false);
