@@ -11,7 +11,7 @@ class AdoptersBookingDetails extends StatelessWidget {
   final String postName;
   final String postImage;
   final String postPetName;
-  final String postType;
+  final String postPurpose;
   final String postDescription;
   final String date;
   final String time;
@@ -24,7 +24,7 @@ class AdoptersBookingDetails extends StatelessWidget {
     required this.postName,
     required this.postImage,
     required this.postPetName,
-    required this.postType,
+    required this.postPurpose,
     required this.postDescription,
     required this.date,
     required this.time,
@@ -126,7 +126,7 @@ class AdoptersBookingDetails extends StatelessWidget {
                       bottom: 10,
                     ),
                     child: Text(
-                      'Type: $postType',
+                      'Type: $postPurpose',
                       style: TextStyle(
                         fontSize: Design.descriptionTitleSize,
                         color: Colors.white,

@@ -8,8 +8,11 @@ class BookingFormOverlay extends StatefulWidget {
   final String postName;
   final String postImage;
   final String postPetName;
-  final String postType;
+  final String postPurpose;
   final String postDescription;
+  final String postLocation;
+  final String postSpecies;
+  final double postFees;
 
   BookingFormOverlay({
     super.key,
@@ -17,8 +20,11 @@ class BookingFormOverlay extends StatefulWidget {
     required this.postName,
     required this.postImage,
     required this.postPetName,
-    required this.postType,
+    required this.postPurpose,
     required this.postDescription,
+    required this.postLocation,
+    required this.postSpecies,
+    required this.postFees,
   });
 
   @override
@@ -104,8 +110,11 @@ class _BookingFormOverlayState extends State<BookingFormOverlay> {
           'postName': widget.postName,
           'postImage': widget.postImage,
           'postPetName': widget.postPetName,
-          'postType': widget.postType,
+          'postPurpose': widget.postPurpose,
           'postDescription': widget.postDescription,
+          'postLocation': widget.postLocation,
+          'postSpecies': widget.postSpecies,
+          'postFees': widget.postFees,
           'phoneNumber': _phoneNumber,
           'date': _selectedDate,
           'time': _selectedTime?.format(context),

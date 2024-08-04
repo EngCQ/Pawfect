@@ -6,7 +6,7 @@ class HomePost extends StatelessWidget {
   final String postName;
   final String postImage;
   final String postPetName;
-  final String postType;
+  final String postPurpose;
   final String postDescription;
   final String sellerUid;
 
@@ -15,7 +15,7 @@ class HomePost extends StatelessWidget {
     required this.postName,
     required this.postImage,
     required this.postPetName,
-    required this.postType,
+    required this.postPurpose,
     required this.postDescription,
     required this.sellerUid,
   });
@@ -45,7 +45,7 @@ class HomePost extends StatelessWidget {
                     'postName': postName,
                     'postImage': postImage,
                     'postPetName': postPetName,
-                    'postType': postType,
+                    'postPurpose': postPurpose,
                     'postDescription': postDescription,
                     'sellerUid': sellerUid,
                   },
@@ -85,7 +85,7 @@ class HomePost extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      postType,
+                      postPurpose,
                       textAlign: TextAlign.right,
                       style: const TextStyle(
                           fontSize: 20,

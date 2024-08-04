@@ -10,19 +10,25 @@ class AdoptersPostDetails extends StatefulWidget {
   final String postName;
   final String postImage;
   final String postPetName;
-  final String postType;
+  final String postPurpose;
   final String postDescription;
   final String postSellerUid;
+  final String postLocation;
+  final String postSpecies;
+  final double postFees;
 
-  const AdoptersPostDetails({
-    Key? key,
-    required this.postName,
-    required this.postImage,
-    required this.postPetName,
-    required this.postType,
-    required this.postDescription,
-    required this.postSellerUid,
-  }) : super(key: key);
+  const AdoptersPostDetails(
+      {Key? key,
+      required this.postName,
+      required this.postImage,
+      required this.postPetName,
+      required this.postPurpose,
+      required this.postDescription,
+      required this.postSellerUid,
+      required this.postLocation,
+      required this.postSpecies,
+      required this.postFees})
+      : super(key: key);
 
   @override
   _AdoptersPostDetailsState createState() => _AdoptersPostDetailsState();
@@ -77,8 +83,11 @@ class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
         'postName': widget.postName,
         'postImage': widget.postImage,
         'postPetName': widget.postPetName,
-        'postType': widget.postType,
+        'postPurpose': widget.postPurpose,
         'postDescription': widget.postDescription,
+        'postLocation': widget.postLocation,
+        'postSpecies': widget.postSpecies,
+        'postFees': widget.postFees,
         'timestamp': FieldValue.serverTimestamp(),
       });
 
@@ -214,7 +223,7 @@ class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
                           bottom: 10,
                         ),
                         child: Text(
-                          'Type: ${widget.postType}',
+                          'Type: ${widget.postPurpose}',
                           style: TextStyle(
                             fontSize: Design.descriptionTitleSize,
                             color: Colors.white,
@@ -223,6 +232,27 @@ class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
                       ),
                       Text(
                         "Pet's Name: ${widget.postPetName}",
+                        style: TextStyle(
+                          fontSize: Design.descriptionTitleSize,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        "Location: ${widget.postLocation}",
+                        style: TextStyle(
+                          fontSize: Design.descriptionTitleSize,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        "Species: ${widget.postSpecies}",
+                        style: TextStyle(
+                          fontSize: Design.descriptionTitleSize,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        "Fees: ${widget.postFees}",
                         style: TextStyle(
                           fontSize: Design.descriptionTitleSize,
                           color: Colors.white,
@@ -263,8 +293,11 @@ class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
               postName: widget.postName,
               postImage: widget.postImage,
               postPetName: widget.postPetName,
-              postType: widget.postType,
+              postPurpose: widget.postPurpose,
               postDescription: widget.postDescription,
+              postLocation: widget.postLocation,
+              postSpecies: widget.postSpecies,
+              postFees: widget.postFees,
             ),
         ],
       ),
@@ -292,7 +325,7 @@ class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
                           }
                         },
                 ),
-                if (widget.postType == 'Pet Adoption')
+                if (widget.postPurpose == 'Adoption')
                   SizedBox(
                     height: 40,
                     width: 180,
@@ -320,7 +353,7 @@ class _AdoptersPostDetailsState extends State<AdoptersPostDetails> {
                       ),
                     ),
                   ),
-                if (widget.postType != 'Pet Adoption')
+                if (widget.postPurpose != 'Adoption')
                   SizedBox(
                     height: 40,
                     width: 180,

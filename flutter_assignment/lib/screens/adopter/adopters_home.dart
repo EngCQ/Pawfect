@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'components/home_post.dart';
 import 'default/adopters_default_header.dart';
 import 'default/adopters_navigation_bar.dart';
-import 'package:flutter_assignment/main.dart';
 
 class AdoptersHome extends StatelessWidget {
   const AdoptersHome({super.key});
@@ -18,27 +16,6 @@ class AdoptersHome extends StatelessWidget {
       throw e;
     }
   }
-
-  // void _showNotification(String title, String body) async {
-  //   const AndroidNotificationDetails androidPlatformChannelSpecifics =
-  //       AndroidNotificationDetails(
-  //     'your_channel_id',
-  //     'your_channel_name',
-  //     channelDescription: 'your_channel_description',
-  //     importance: Importance.max,
-  //     priority: Priority.high,
-  //     showWhen: false,
-  //   );
-  //   const NotificationDetails platformChannelSpecifics =
-  //       NotificationDetails(android: androidPlatformChannelSpecifics);
-  //   await flutterLocalNotificationsPlugin.show(
-  //     0,
-  //     title,
-  //     body,
-  //     platformChannelSpecifics,
-  //     payload: 'item x',
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -65,14 +42,13 @@ class AdoptersHome extends StatelessWidget {
           }
 
           final posts = snapshot.data!.docs.where((post) {
-            final postType = post['type'];
+            final postPurpose = post['purpose'];
             final postUserName = post['userName'];
 
             final matchesSearchText =
                 searchText.isEmpty || postUserName.contains(searchText);
-            final matchesAdoption =
-                searchAdoption && postType == 'Pet Adoption';
-            final matchesMissing = searchMissing && postType == 'Missing Pet';
+            final matchesAdoption = searchAdoption && postPurpose == 'Adoption';
+            final matchesMissing = searchMissing && postPurpose == 'Lost';
 
             return matchesSearchText && (matchesAdoption || matchesMissing);
           }).toList();
@@ -96,7 +72,7 @@ class AdoptersHome extends StatelessWidget {
                     postName: post['userName'],
                     postImage: imageUrl,
                     postPetName: post['petName'],
-                    postType: post['type'],
+                    postPurpose: post['purpose'],
                     postDescription: post['description'],
                     sellerUid: post['sellerUid'],
                   );

@@ -66,7 +66,7 @@ class AdoptersFavourite extends StatelessWidget {
                           postName: data['postName'] ?? '',
                           postImage: data['postImage'] ?? '',
                           postPetName: data['postPetName'] ?? '',
-                          postType: data['postType'] ?? '',
+                          postPurpose: data['postPurpose'] ?? '',
                           postDescription: data['postDescription'] ?? '',
                           sellerUid: data['sellerUid'] ?? '',
                         );

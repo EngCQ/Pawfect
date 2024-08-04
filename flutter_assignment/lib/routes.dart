@@ -105,9 +105,12 @@ class AppRoutes {
             postName: detailsArgs['postName'],
             postImage: detailsArgs['postImage'],
             postPetName: detailsArgs['postPetName'],
-            postType: detailsArgs['postType'],
+            postPurpose: detailsArgs['postPurpose'],
             postDescription: detailsArgs['postDescription'],
             postSellerUid: detailsArgs['sellerUid'],
+            postLocation: detailsArgs['postLocation'],
+            postSpecies: detailsArgs['postSpecies'],
+            postFees: detailsArgs['postFees'],
           ),
         );
 
@@ -118,7 +121,7 @@ class AppRoutes {
             postName: args['postName'],
             postImage: args['postImage'],
             postPetName: args['postPetName'],
-            postType: args['postType'],
+            postPurpose: args['postPurpose'],
             postDescription: args['postDescription'],
             date: args['date'],
             time: args['time'],
