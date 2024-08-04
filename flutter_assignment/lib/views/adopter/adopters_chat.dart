@@ -33,7 +33,7 @@ class _AdoptersChatState extends State<AdoptersChat> {
 
     if (currentUser == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('User is not logged in')),
+        const SnackBar(content: Text('User is not logged in')),
       );
       return;
     }

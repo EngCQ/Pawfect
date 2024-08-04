@@ -95,7 +95,7 @@ class _AdoptersHomeState extends State<AdoptersHome> {
           );
 
           if (reminderDateTime.isBefore(now) &&
-              reminderDateTime.add(Duration(minutes: 1)).isAfter(now)) {
+              reminderDateTime.add(const Duration(minutes: 5)).isAfter(now)) {
             matchingReminders.add(reminder);
             break;
           }

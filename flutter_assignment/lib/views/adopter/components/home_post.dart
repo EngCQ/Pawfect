@@ -39,6 +39,7 @@ class HomePost extends StatefulWidget {
 
 class _HomePostState extends State<HomePost> {
   bool isFavorite = false;
+  String? phoneNumber;
 
   @override
   void initState() {
@@ -50,6 +51,12 @@ class _HomePostState extends State<HomePost> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final uid = user.uid;
+      final userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (userDoc.exists) {
+        phoneNumber = userDoc['phoneNumber'];
+      }
+
       final querySnapshot = await FirebaseFirestore.instance
           .collection('favorites')
           .where('uid', isEqualTo: uid)
@@ -78,6 +85,7 @@ class _HomePostState extends State<HomePost> {
         'location': widget.location,
         'species': widget.species,
         'fee': widget.fee,
+        'phoneNumber': phoneNumber,
       });
 
       setState(() {
@@ -250,6 +258,7 @@ class _HomePostState extends State<HomePost> {
                           'location': widget.location,
                           'species': widget.species,
                           'fee': widget.fee,
+                          'phoneNumber': phoneNumber,
                           'date': selectedDate,
                           'time': selectedTime!.format(context),
                           'notes': notes,
