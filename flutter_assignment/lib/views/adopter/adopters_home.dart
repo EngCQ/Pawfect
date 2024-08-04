@@ -25,11 +25,11 @@ class _AdoptersHomeState extends State<AdoptersHome> {
   @override
   void initState() {
     super.initState();
+    tz.initializeTimeZones();
     final userUid = Provider.of<UserAuthentication>(context, listen: false)
             .userDetails?['uid'] ??
         '';
     _getFavoritePostNames(userUid);
-    tz.initializeTimeZones();
     fetchReminders(userUid);
   }
 
@@ -119,11 +119,28 @@ class _AdoptersHomeState extends State<AdoptersHome> {
     fetchReminders(userUid);
   }
 
-  void _removeFavoritePost(String postName) {
-    setState(() {
-      favoritePostNames.add(postName);
-      posts = posts.where((post) => post['petName'] != postName).toList();
+  Future<void> _addFavoritePost(String postName, String uid) async {
+    await FirebaseFirestore.instance.collection('favorites').add({
+      'uid': uid,
+      'postName': postName,
     });
+    _getFavoritePostNames(uid); // Refresh favorite posts
+  }
+
+  void _removeFavoritePost(String postName, String uid) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('favorites')
+        .where('uid', isEqualTo: uid)
+        .where('postName', isEqualTo: postName)
+        .get();
+
+    for (var doc in querySnapshot.docs) {
+      await FirebaseFirestore.instance
+          .collection('favorites')
+          .doc(doc.id)
+          .delete();
+    }
+    _getFavoritePostNames(uid);
   }
 
   @override
@@ -242,10 +259,10 @@ class _AdoptersHomeState extends State<AdoptersHome> {
                       location: post['location'],
                       species: post['species'],
                       fee: post['fee'],
-                      onFavorite: () => _removeFavoritePost(post['petName']),
-                      onUnfavorite: () {
-                        // Handle unfavorite if needed
-                      },
+                      onFavorite: () =>
+                          _addFavoritePost(post['petName'], userUid),
+                      onUnfavorite: () =>
+                          _removeFavoritePost(post['petName'], userUid),
                     );
                   },
                 );

@@ -2,9 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_assignment/routes.dart';
-import 'package:flutter_assignment/views/adopter/adopters_notification.dart';
 import 'package:flutter_assignment/views/adopter/default/adopters_app_color.dart';
-import 'package:flutter_assignment/main.dart';
 
 class DefaultHeader extends StatefulWidget implements PreferredSizeWidget {
   const DefaultHeader({super.key});
@@ -24,29 +22,33 @@ class _DefaultHeaderState extends State<DefaultHeader> {
   void initState() {
     super.initState();
     getCurrentUser();
-    listenForUnreadNotifications();
   }
 
   void getCurrentUser() async {
     user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       listenForUnreadNotifications();
+    } else {
+      print("No user is currently logged in.");
     }
   }
 
   void listenForUnreadNotifications() {
     if (user != null) {
+      print("Listening for unread notifications for user: ${user!.uid}");
       FirebaseFirestore.instance
           .collection('notifications')
-          .where('receiverUid', isEqualTo: user!.uid)
+          .where('receiverId', isEqualTo: user!.uid)
           .where('isRead', isEqualTo: false)
           .snapshots()
           .listen((event) {
         if (event.docs.isNotEmpty) {
+          print("Unread notifications found: ${event.docs.length}");
           setState(() {
             hasNotification = true;
           });
         } else {
+          print("No unread notifications.");
           setState(() {
             hasNotification = false;
           });
