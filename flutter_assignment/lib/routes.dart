@@ -90,38 +90,38 @@ class AppRoutes {
         final userId = args['userId'] as String;
         return MaterialPageRoute(
             builder: (_) => AdopterEditProfile(userId: userId));
-      case adopterPostDetails:
-        final detailsArgs = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(
-          builder: (_) => AdoptersPostDetails(
-            postName: detailsArgs['postName'],
-            postImage: detailsArgs['postImage'],
-            postPetName: detailsArgs['postPetName'],
-            postPurpose: detailsArgs['postPurpose'],
-            postDescription: detailsArgs['postDescription'],
-            postSellerUid: detailsArgs['sellerUid'],
-            postLocation: detailsArgs['postLocation'],
-            postSpecies: detailsArgs['postSpecies'],
-            postFees: detailsArgs['postFees'],
-          ),
-        );
+      // case adopterPostDetails:
+      //   final detailsArgs = settings.arguments as Map<String, dynamic>;
+      //   return MaterialPageRoute(
+      //     builder: (_) => AdoptersPostDetails(
+      //       postName: detailsArgs['postName'],
+      //       postImage: detailsArgs['postImage'],
+      //       postPetName: detailsArgs['postPetName'],
+      //       postPurpose: detailsArgs['postPurpose'],
+      //       postDescription: detailsArgs['postDescription'],
+      //       postSellerUid: detailsArgs['sellerUid'],
+      //       postLocation: detailsArgs['postLocation'],
+      //       postSpecies: detailsArgs['postSpecies'],
+      //       postFees: detailsArgs['postFees'],
+      //     ),
+      //   );
 
-      case adopterBookingDetails:
-        final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(
-          builder: (_) => AdoptersBookingDetails(
-            postName: args['postName'],
-            postImage: args['postImage'],
-            postPetName: args['postPetName'],
-            postPurpose: args['postPurpose'],
-            postDescription: args['postDescription'],
-            date: args['date'],
-            time: args['time'],
-            phoneNumber: args['phoneNumber'],
-            notes: args['notes'],
-            bookingId: args['bookingId'],
-          ),
-        );
+      // case adopterBookingDetails:
+      //   final args = settings.arguments as Map<String, dynamic>;
+      //   return MaterialPageRoute(
+      //     builder: (_) => AdoptersBookingDetails(
+      //       postName: args['postName'],
+      //       postImage: args['postImage'],
+      //       postPetName: args['postPetName'],
+      //       postPurpose: args['postPurpose'],
+      //       postDescription: args['postDescription'],
+      //       date: args['date'],
+      //       time: args['time'],
+      //       phoneNumber: args['phoneNumber'],
+      //       notes: args['notes'],
+      //       bookingId: args['bookingId'],
+      //     ),
+      //   );
       case adopterNotification:
         return MaterialPageRoute(builder: (_) => AdoptersNotification());
       case adopterFilter:
