@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_assignment/viewmodels/user_authentication.dart';
 import 'package:flutter_assignment/views/adopter/components/booking.dart';
+import 'package:intl/intl.dart'; // Add this import
 import 'default/adopters_default_header.dart';
 import 'default/adopters_design.dart';
 import 'default/adopters_navigation_bar.dart';
@@ -61,20 +62,30 @@ class AdoptersAppointment extends StatelessWidget {
                       itemCount: documents.length,
                       itemBuilder: (context, index) {
                         Map<String, dynamic> data = documents[index].data() as Map<String, dynamic>;
-                        DateTime appointmentDate = data['date'].toDate();
-                        bool isPast = appointmentDate.isBefore(DateTime.now());
+
+                        // Handle string date conversion
+                        String? postDateString = data['postDate'];
+                        DateTime? appointmentDate;
+                        if (postDateString != null) {
+                          try {
+                            appointmentDate = DateFormat('yyyy-MM-dd').parse(postDateString);
+                          } catch (e) {
+                            appointmentDate = null;
+                          }
+                        }
+                        bool isPast = appointmentDate != null && appointmentDate.isBefore(DateTime.now());
 
                         return Booking(
                           bookingId: documents[index].id, // Pass bookingId
                           image: data['postImage'] ?? '',
-                          name: data['postName'] ?? '',
-                          date: appointmentDate.toString().split(' ')[0],
+                          name: data['postPetName'] ?? '',
+                          date: postDateString ?? 'N/A',  // Ensure it's a string
                           time: data['time'] ?? '',
                           phoneNumber: data['phoneNumber'] ?? '',
                           notes: data['notes'] ?? '',
                           postType: data['postType'] ?? '',
                           postDescription: data['postDescription'] ?? '',
-                          cardColor: isPast ? Colors.red : Colors.green,
+                          cardColor: appointmentDate != null && isPast ? Colors.red : Colors.green,
                         );
                       },
                     ),

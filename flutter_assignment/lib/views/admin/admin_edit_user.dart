@@ -83,13 +83,17 @@ class AdminEditUser extends StatelessWidget {
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: viewModel.fullNameController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Current Full Name',
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
+                          errorText: viewModel.fullNameError,
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'Please enter the full name';
+                          }
+                          if (value.length < 3) {
+                            return 'Full Name must be at least 3 characters long';
                           }
                           return null;
                         },
@@ -117,10 +121,10 @@ class AdminEditUser extends StatelessWidget {
                       TextFormField(
                         readOnly: true,
                         controller: viewModel.phoneNumberController,
-                        decoration: const InputDecoration(
-                          
+                        decoration: InputDecoration(
                           labelText: 'First Phone Number',
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
+                          errorText: viewModel.phoneError,
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {

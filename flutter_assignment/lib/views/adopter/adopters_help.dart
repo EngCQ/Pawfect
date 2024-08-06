@@ -12,7 +12,7 @@ class AdoptersHelp extends StatefulWidget {
 
 class _AdoptersHelpState extends State<AdoptersHelp> {
   final TextEditingController _feedbackController = TextEditingController();
-  final TextEditingController _purposeController = TextEditingController(); // New Controller
+  final TextEditingController _purposeController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final List<Map<String, String>> _faqItems = [
@@ -44,7 +44,7 @@ class _AdoptersHelpState extends State<AdoptersHelp> {
           content: Text('Feedback sent!'),
         ));
         _feedbackController.clear();
-        _purposeController.clear(); // Clear the purpose field
+        _purposeController.clear();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Please enter both purpose and feedback.'),
@@ -55,6 +55,13 @@ class _AdoptersHelpState extends State<AdoptersHelp> {
         content: Text('You need to be logged in to send feedback.'),
       ));
     }
+  }
+
+  @override
+  void dispose() {
+    _feedbackController.dispose();
+    _purposeController.dispose();
+    super.dispose();
   }
 
   @override
@@ -112,7 +119,7 @@ class _AdoptersHelpState extends State<AdoptersHelp> {
                     ),
                     const SizedBox(height: 10),
                     TextField(
-                      controller: _purposeController, // Purpose TextField
+                      controller: _purposeController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Enter the purpose of your feedback',
@@ -120,7 +127,7 @@ class _AdoptersHelpState extends State<AdoptersHelp> {
                     ),
                     const SizedBox(height: 10),
                     TextField(
-                      controller: _feedbackController, // Feedback TextField
+                      controller: _feedbackController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Enter your feedback here',

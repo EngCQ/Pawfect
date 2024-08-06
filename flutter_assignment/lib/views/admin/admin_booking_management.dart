@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-//import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_assignment/viewmodels/admin/booking_management/admin_edit_booking_viewmodel.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_assignment/widgets/drawer_admin.dart';
+import 'package:flutter_assignment/routes.dart'; // Make sure to import AppRoutes
+import 'package:flutter_assignment/models/booking_model.dart'; // Import the Booking model
+import 'package:flutter_assignment/viewmodels/user_authentication.dart';
+import 'admin_edit_booking.dart'; // Import the AdminEditBooking screen
 
 class AdminBookingManagement extends StatefulWidget {
   const AdminBookingManagement({super.key});
@@ -11,8 +16,8 @@ class AdminBookingManagement extends StatefulWidget {
 }
 
 class AdminBookingManagementState extends State<AdminBookingManagement> {
-  bool isActiveBookingsSelected = true;
   final TextEditingController searchController = TextEditingController();
+  String searchQuery = '';
 
   @override
   void dispose() {
@@ -20,25 +25,74 @@ class AdminBookingManagementState extends State<AdminBookingManagement> {
     super.dispose();
   }
 
+  void updateSearchQuery(String query) {
+    setState(() {
+      searchQuery = query.toLowerCase();
+    });
+  }
+
+  Future<void> deleteBooking(String bookingId) async {
+    try {
+      await FirebaseFirestore.instance.collection('bookings').doc(bookingId).delete();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Booking deleted successfully!')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete booking: $e')),
+      );
+    }
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context, String bookingId) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Booking'),
+          content: const Text('Are you sure you want to delete this booking? This action cannot be undone.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                deleteBooking(bookingId);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final userAuth = Provider.of<UserAuthentication>(context);
+    final userEmail = userAuth.user?.email ?? 'User';
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF0583CB),
         title: const Text('Bookings'),
-        actions: const [
+        actions: [
           Row(
             children: [
               Text(
-                'Admin',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                userEmail,
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
               ),
-              SizedBox(width: 16),
-              CircleAvatar(
+              const SizedBox(width: 16),
+              const CircleAvatar(
                 backgroundColor: Colors.grey,
                 child: Icon(Icons.person, color: Colors.white),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
             ],
           ),
         ],
@@ -50,76 +104,12 @@ class AdminBookingManagementState extends State<AdminBookingManagement> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ToggleButtons(
-                isSelected: [isActiveBookingsSelected, !isActiveBookingsSelected],
-                onPressed: (index) {
-                  setState(() {
-                    isActiveBookingsSelected = index == 0;
-                  });
-                },
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('Active Bookings'),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('Completed Bookings'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                color: Colors.grey[300],
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Total ${isActiveBookingsSelected ? 'Active Bookings' : 'Completed Bookings'}: 0', // Placeholder text
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: PieChart(
-                        PieChartData(
-                          sections: [
-                            PieChartSectionData(
-                              color: Colors.blue,
-                              value: 0, // Placeholder value
-                              title: 'Active',
-                              radius: 50,
-                              titleStyle: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            PieChartSectionData(
-                              color: Colors.orange,
-                              value: 0, // Placeholder value
-                              title: 'Completed',
-                              radius: 50,
-                              titleStyle: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               const SizedBox(height: 16),
               Row(
                 children: [
                   ElevatedButton.icon(
                     onPressed: () {
-                      // Navigator.push to the Add Booking screen
+                      Navigator.pushNamed(context, AppRoutes.adminSelectSellerAppointment);
                     },
                     icon: const Icon(Icons.add),
                     label: const Text('ADD'),
@@ -129,16 +119,16 @@ class AdminBookingManagementState extends State<AdminBookingManagement> {
                     child: TextField(
                       controller: searchController,
                       decoration: InputDecoration(
-                        hintText: 'Search by booking ID or status',
+                        hintText: 'Search by booking ID',
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.search),
                           onPressed: () {
-                            setState(() {});
+                            updateSearchQuery(searchController.text);
                           },
                         ),
                       ),
                       onChanged: (value) {
-                        setState(() {});
+                        updateSearchQuery(value);
                       },
                     ),
                   ),
@@ -146,38 +136,72 @@ class AdminBookingManagementState extends State<AdminBookingManagement> {
               ),
               const SizedBox(height: 16),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.6,
-                child: ListView.builder(
-                  itemCount: 0, // Placeholder count
-                  itemBuilder: (context, index) {
-                    // Placeholder data
-                    final bookingId = 'ID';
-                    final bookingStatus = 'Status';
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance.collection('bookings').snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                    return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          child: Text(
-                            bookingId.substring(0, 2).toUpperCase(),
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        title: Text('Booking $bookingId'), // Placeholder text
-                        subtitle: Text('Status: $bookingStatus'), // Placeholder text
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () {
-                                // Navigator.push to the Edit Booking screen
-                              },
+                    if (snapshot.hasError) {
+                      return const Center(child: Text('Error fetching data.'));
+                    }
+
+                    final bookings = snapshot.data?.docs ?? [];
+                    final filteredBookings = bookings.where((booking) {
+                      final bookingData = booking.data() as Map<String, dynamic>;
+                      final bookingId = bookingData['bookingsId'] ?? '';
+
+                      return bookingId.toLowerCase().contains(searchQuery);
+                    }).toList();
+
+                    if (filteredBookings.isEmpty) {
+                      return const Center(child: Text('No bookings found.'));
+                    }
+
+                    return ListView.builder(
+                      itemCount: filteredBookings.length,
+                      itemBuilder: (context, index) {
+                        final booking = filteredBookings[index];
+                        final bookingModel = Booking.fromFirestore(booking);
+                        final bookingId = bookingModel.bookingsId;
+                        final bookingDate = bookingModel.date;
+                        final bookingTime = bookingModel.time;
+
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ListTile(
+                            title: Text('Booking $bookingId'),
+                            subtitle: Text('Date: $bookingDate\nTime: $bookingTime'),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.edit),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChangeNotifierProvider(
+                                          create: (_) => EditBookingViewModel(),
+                                          child: AdminEditBooking(bookingId: booking.id),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () {
+                                    _showDeleteConfirmationDialog(context, booking.id);
+                                  },
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),

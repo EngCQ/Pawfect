@@ -81,66 +81,77 @@ class AdminUserManagementState extends State<AdminUserManagement> {
                     StreamBuilder<QuerySnapshot>(
                       stream: usersRef.snapshots(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
                         }
 
                         if (snapshot.hasError) {
-                          return const Center(child: Text('Error fetching data.'));
+                          return const Center(
+                              child: Text('Error fetching data.'));
                         }
 
                         final users = snapshot.data?.docs ?? [];
 
-                        int totalAdopters = users.where((user) => user['role'] == 'Adopter').length;
-                        int totalPetSellers = users.where((user) => user['role'] == 'Seller').length;
+                        int totalAdopters = users
+                            .where((user) => user['role'] == 'Adopter')
+                            .length;
+                        int totalPetSellers = users
+                            .where((user) => user['role'] == 'Seller')
+                            .length;
 
-                        return Container(
-                          padding: const EdgeInsets.all(16.0),
-                          color: Colors.grey[300],
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Total ${viewModel.isAdoptersSelected ? 'Adopters' : 'Pet Sellers'}: ${viewModel.isAdoptersSelected ? totalAdopters : totalPetSellers}',
-                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              if (totalAdopters + totalPetSellers > 0)
-                                SizedBox(
-                                  width: 100,
-                                  height: 100,
-                                  child: PieChart(
-                                    PieChartData(
-                                      sections: [
-                                        PieChartSectionData(
-                                          color: Colors.blue,
-                                          value: totalAdopters.toDouble(),
-                                          title: 'Adopters',
-                                          radius: 50,
-                                          titleStyle: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
+                        return Material(
+                          color: Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(8.0),
+                          elevation: 2.0,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Total ${viewModel.isAdoptersSelected ? 'Adopters' : 'Pet Sellers'}: ${viewModel.isAdoptersSelected ? totalAdopters : totalPetSellers}',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                                if (totalAdopters + totalPetSellers > 0)
+                                  SizedBox(
+                                    width: 100,
+                                    height: 100,
+                                    child: PieChart(
+                                      PieChartData(
+                                        sections: [
+                                          PieChartSectionData(
+                                            color: Colors.blue,
+                                            value: totalAdopters.toDouble(),
+                                            title: 'Adopters',
+                                            radius: 50,
+                                            titleStyle: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
                                           ),
-                                          badgePositionPercentageOffset: 1.2,
-                                        ),
-                                        PieChartSectionData(
-                                          color: Colors.orange,
-                                          value: totalPetSellers.toDouble(),
-                                          title: 'Pet Sellers',
-                                          radius: 50,
-                                          titleStyle: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                          badgePositionPercentageOffset: 1.2,
-                                        ),
-                                      ],
+                                          PieChartSectionData(
+                                            color: Colors.orange,
+                                            value: totalPetSellers.toDouble(),
+                                            title: 'Pet Sellers',
+                                            radius: 50,
+                                            titleStyle: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                )
-                              else
-                                const Text('No data available for the chart.'),
-                            ],
+                                  )
+                                else
+                                  const Text(
+                                      'No data available for the chart.'),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -152,7 +163,9 @@ class AdminUserManagementState extends State<AdminUserManagement> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const AdminAddUser()), // Use MaterialPageRoute
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const AdminAddUser()), // Use MaterialPageRoute
                             );
                           },
                           icon: const Icon(Icons.add),
@@ -184,31 +197,39 @@ class AdminUserManagementState extends State<AdminUserManagement> {
                       child: StreamBuilder<QuerySnapshot>(
                         stream: usersQuery.snapshots(),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const Center(child: CircularProgressIndicator());
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
                           }
 
                           if (snapshot.hasError) {
-                            return const Center(child: Text('Error fetching data.'));
+                            return const Center(
+                                child: Text('Error fetching data.'));
                           }
 
                           final users = snapshot.data?.docs ?? [];
-                          final filteredUsers = viewModel.getFilteredUsers(users);
+                          final filteredUsers =
+                              viewModel.getFilteredUsers(users);
 
                           if (filteredUsers.isEmpty) {
-                            return const Center(child: Text('No users found matching your search.'));
+                            return const Center(
+                                child: Text(
+                                    'No users found matching your search.'));
                           }
 
                           return ListView.builder(
                             itemCount: filteredUsers.length,
                             itemBuilder: (context, index) {
                               final user = filteredUsers[index];
+                              final usersEmail = user.email;
+                              final userPhoneNumber = user.phoneNumber;
                               final userName = user.fullName;
                               final userId = user.uid;
                               final profileImage = user.profileImage;
                               final bool isOnline = user.isOnline;
                               final DateTime? lastSeen = user.lastSeen;
-                              const double avatarRadius = 30; 
+                              const double avatarRadius = 30;
 
                               // Format lastSeen as a string
                               String lastSeenString = lastSeen != null
@@ -216,13 +237,15 @@ class AdminUserManagementState extends State<AdminUserManagement> {
                                   : 'Never';
 
                               return Card(
-                                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
                                 child: ListTile(
                                   leading: Stack(
                                     children: [
                                       profileImage != null
                                           ? CircleAvatar(
-                                              backgroundImage: NetworkImage(profileImage),
+                                              backgroundImage:
+                                                  NetworkImage(profileImage),
                                               radius: avatarRadius,
                                             )
                                           : CircleAvatar(
@@ -230,9 +253,12 @@ class AdminUserManagementState extends State<AdminUserManagement> {
                                               radius: avatarRadius,
                                               child: Text(
                                                 userName.isNotEmpty
-                                                    ? userName.substring(0, 2).toUpperCase()
+                                                    ? userName
+                                                        .substring(0, 2)
+                                                        .toUpperCase()
                                                     : 'NA', // Display initials or 'NA' if name is empty
-                                                style: const TextStyle(color: Colors.white),
+                                                style: const TextStyle(
+                                                    color: Colors.white),
                                               ),
                                             ),
                                       Positioned(
@@ -242,7 +268,10 @@ class AdminUserManagementState extends State<AdminUserManagement> {
                                           width: 15,
                                           height: 15,
                                           decoration: BoxDecoration(
-                                            color: isOnline ? Colors.green : const Color.fromARGB(255, 223, 218, 217),
+                                            color: isOnline
+                                                ? Colors.green
+                                                : const Color.fromARGB(
+                                                    255, 223, 218, 217),
                                             shape: BoxShape.circle,
                                             border: Border.all(
                                               color: Colors.white,
@@ -255,9 +284,11 @@ class AdminUserManagementState extends State<AdminUserManagement> {
                                   ),
                                   title: Text(userName),
                                   subtitle: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text(userId),
+                                      Text('Email: $usersEmail'),
+                                      Text('Phone Number: $userPhoneNumber'),
                                       Text('Last seen: $lastSeenString'),
                                     ],
                                   ),
@@ -270,7 +301,8 @@ class AdminUserManagementState extends State<AdminUserManagement> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => AdminEditUser(userId: userId),
+                                              builder: (context) =>
+                                                  AdminEditUser(userId: userId),
                                             ),
                                           );
                                         },

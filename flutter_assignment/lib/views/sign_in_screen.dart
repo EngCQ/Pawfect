@@ -15,14 +15,14 @@ class SignInScreenState extends State<SignInScreen> {
   bool _isPasswordVisible = false; // Flag for toggling password visibility
   bool _isLoading = false; // Flag for loading state
   String? _errorMessage; // Error message for validation
-
-  // Controllers for form fields
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  // final TextEditingController _emailController = TextEditingController(text: "adopter1@gmail.com");
+  // final TextEditingController _passwordController = TextEditingController(text: "111111");
+
   @override
   void dispose() {
-    // Dispose controllers when the widget is disposed
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -53,8 +53,7 @@ class SignInScreenState extends State<SignInScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Sign In successful!'),
-                  duration:
-                      Duration(seconds: 1), // Set the duration for 1 second
+                  duration: Duration(seconds: 1), // Set the duration for 1 second
                 ),
               );
 
@@ -87,8 +86,36 @@ class SignInScreenState extends State<SignInScreen> {
     }
   }
 
+  Future<void> _resetPassword(BuildContext context) async {
+    if (_emailController.text.isEmpty) {
+      setState(() {
+        _errorMessage = 'Please enter your email to reset your password';
+      });
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password reset email sent! Check your inbox.'),
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessage = e.message;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'An error occurred. Please try again.';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final userAuth = Provider.of<UserAuthentication>(context);
+
     return Scaffold(
       backgroundColor: Colors.grey[200], // Background color of the screen
       body: Padding(
@@ -103,8 +130,7 @@ class SignInScreenState extends State<SignInScreen> {
                 children: [
                   // App logo
                   Center(
-                    child:
-                        Image.asset('assets/logo.png', width: 200, height: 200),
+                    child: Image.asset('assets/logo.png', width: 200, height: 200),
                   ),
                   const SizedBox(height: 24), // Spacing
                   const Center(
@@ -151,9 +177,7 @@ class SignInScreenState extends State<SignInScreen> {
                       border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                          _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                         ),
                         onPressed: () {
                           setState(() {
@@ -172,7 +196,18 @@ class SignInScreenState extends State<SignInScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 24), // Spacing
+                  const SizedBox(height: 8), // Spacing
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () => _resetPassword(context),
+                      child: const Text(
+                        'Forgot Password?',
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16), // Spacing
                   // Sign In button
                   Center(
                     child: _isLoading
@@ -204,6 +239,7 @@ class SignInScreenState extends State<SignInScreen> {
                         ),
                         TextButton(
                           onPressed: () {
+                            userAuth.clearErrors(); // Clear error messages
                             Navigator.pushNamed(context, '/signUp');
                           },
                           child: const Text(

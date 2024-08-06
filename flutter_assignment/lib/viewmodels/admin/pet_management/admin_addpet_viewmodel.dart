@@ -30,10 +30,10 @@ class PetViewModel extends ChangeNotifier {
     }
   }
 
-  void removeImage() {
-    selectedImage = null;
-    notifyListeners();
-  }
+  // void removeImage() {
+  //   selectedImage = null;
+  //   notifyListeners();
+  // }
 
   void setLoading(bool value) {
     isLoading = value;

@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_assignment/viewmodels/admin/booking_management/admin_add_booking_viewmodel.dart';
+import 'package:flutter_assignment/viewmodels/admin/dashboard_viewmodel.dart';
+import 'package:flutter_assignment/viewmodels/admin/feedback_management/admin_feedback_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'viewmodels/user_authentication.dart';
 import 'viewmodels/theme_provider.dart';
@@ -16,6 +19,9 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => UserAuthentication()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => AppointmentViewModel()),
+        ChangeNotifierProvider(create: (_) => FeedbackViewModel()),
+        ChangeNotifierProvider(create: (_) => AdminDashboardViewModel()),
       ],
       child: const MyApp(),
     ),
@@ -26,10 +32,10 @@ class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   @override
@@ -106,6 +112,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
     return MaterialApp(
       title: 'Pet Application',
+      debugShowCheckedModeBanner: false,
       themeMode: themeProvider.themeMode,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),

@@ -99,55 +99,59 @@ class AdminPetManagementState extends State<AdminPetManagement> {
                             .where((pet) => pet['purpose'] == 'Lost')
                             .length;
 
-                        return Container(
-                          padding: const EdgeInsets.all(16.0),
-                          color: Colors.grey[300],
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                viewModel.isNewPetSelected
-                                    ? 'Adoption Pets: $totalAdoptionPets'
-                                    : 'Lost Pets: $totalLostPets',
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              if (totalAdoptionPets + totalLostPets > 0)
-                                SizedBox(
-                                  width: 100,
-                                  height: 100,
-                                  child: PieChart(
-                                    PieChartData(
-                                      sections: [
-                                        PieChartSectionData(
-                                          color: Colors.blue,
-                                          value: totalAdoptionPets.toDouble(),
-                                          title: 'Adoption',
-                                          radius: 50,
-                                          titleStyle: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
+                        return Material(
+                          color: Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(8.0),
+                          elevation: 2.0,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  viewModel.isNewPetSelected
+                                      ? 'Adoption Pets: $totalAdoptionPets'
+                                      : 'Lost Pets: $totalLostPets',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                                if (totalAdoptionPets + totalLostPets > 0)
+                                  SizedBox(
+                                    width: 100,
+                                    height: 100,
+                                    child: PieChart(
+                                      PieChartData(
+                                        sections: [
+                                          PieChartSectionData(
+                                            color: Colors.blue,
+                                            value: totalAdoptionPets.toDouble(),
+                                            title: 'Adoption',
+                                            radius: 50,
+                                            titleStyle: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
                                           ),
-                                        ),
-                                        PieChartSectionData(
-                                          color: Colors.orange,
-                                          value: totalLostPets.toDouble(),
-                                          title: 'Lost',
-                                          radius: 50,
-                                          titleStyle: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
+                                          PieChartSectionData(
+                                            color: Colors.orange,
+                                            value: totalLostPets.toDouble(),
+                                            title: 'Lost',
+                                            radius: 50,
+                                            titleStyle: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                )
-                              else
-                                const Text('No data available for the chart.'),
-                            ],
+                                  )
+                                else
+                                  const Text(
+                                      'No data available for the chart.'),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -228,10 +232,11 @@ class AdminPetManagementState extends State<AdminPetManagement> {
                               final petData = pet.data() as Map<String,
                                   dynamic>; // Access the data as a map
                               final petName = petData['petName'] ?? 'Unknown';
+                              final petFee = petData['fee'] ?? 'Unknown';
+                              final petSpecies =
+                                  petData['species'] ?? 'Unknown';
                               final petId = pet.id;
                               final profileImage = petData['imageUrl'];
-                              final bool isAvailable =
-                                  petData['purpose'] == 'Adoption';
                               const double avatarRadius = 30;
 
                               return Card(
@@ -246,9 +251,9 @@ class AdminPetManagementState extends State<AdminPetManagement> {
                                                   NetworkImage(profileImage),
                                               radius: avatarRadius,
                                             )
-                                          : CircleAvatar(
+                                          : const CircleAvatar(
                                               backgroundImage: AssetImage(
-                                                  'assets/default_profile.png'),
+                                                  'assets/pet_icon.png'),
                                               radius: avatarRadius,
                                             ),
                                       Positioned(
@@ -257,22 +262,28 @@ class AdminPetManagementState extends State<AdminPetManagement> {
                                         child: Container(
                                           width: 15,
                                           height: 15,
-                                          decoration: BoxDecoration(
-                                            color: isAvailable
-                                                ? Colors.green
-                                                : Colors.red,
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: Colors.white,
-                                              width: 2,
-                                            ),
-                                          ),
+                                          // decoration: BoxDecoration(
+                                          //   color: isAvailable ? Colors.green : Colors.red,
+                                          //   shape: BoxShape.circle,
+                                          //   border: Border.all(
+                                          //     color: Colors.white,
+                                          //     width: 2,
+                                          //   ),
+                                          // ),
                                         ),
                                       ),
                                     ],
                                   ),
                                   title: Text(petName),
-                                  subtitle: Text(petId),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Species: $petSpecies'),
+                                      //Text('ID: $petId'),
+                                      Text('Fee (RM): $petFee'),
+                                    ],
+                                  ),
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [

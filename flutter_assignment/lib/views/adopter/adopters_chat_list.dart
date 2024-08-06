@@ -17,29 +17,11 @@ class _AdoptersChatListState extends State<AdoptersChatList> {
   final currentUser = FirebaseAuth.instance.currentUser;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    setState(() {}); // Trigger a rebuild to refresh unread status
-  }
-
-  @override
-  void didUpdateWidget(AdoptersChatList oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    setState(() {}); // Trigger a rebuild to refresh unread status
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DefaultHeader(),
       body: Column(
         children: [
-          // Search bar
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -60,14 +42,15 @@ class _AdoptersChatListState extends State<AdoptersChatList> {
               },
             ),
           ),
-          // Chat user list
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream:
-                  FirebaseFirestore.instance.collection('users').snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .where('role', isNotEqualTo: 'Admin')
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 var users = snapshot.data!.docs;
                 var filteredUsers = users.where((user) {
@@ -99,7 +82,7 @@ class _AdoptersChatListState extends State<AdoptersChatList> {
                                     ? NetworkImage(image)
                                     : null,
                                 child:
-                                    image.isEmpty ? Icon(Icons.person) : null,
+                                    image.isEmpty ? const Icon(Icons.person) : null,
                               ),
                               if (hasUnreadMessages)
                                 Positioned(
@@ -108,7 +91,7 @@ class _AdoptersChatListState extends State<AdoptersChatList> {
                                   child: Container(
                                     width: 8,
                                     height: 8,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       color: Colors.red,
                                       shape: BoxShape.circle,
                                     ),
@@ -119,9 +102,7 @@ class _AdoptersChatListState extends State<AdoptersChatList> {
                           title: Text(fullName),
                           subtitle: Text(isOnline ? 'Online' : 'Offline'),
                           onTap: () async {
-                            // Mark messages as read
                             await _markMessagesAsRead(userId);
-                            // Mark notifications as read
                             await _markNotificationsAsRead(userId);
 
                             Navigator.push(
@@ -134,7 +115,6 @@ class _AdoptersChatListState extends State<AdoptersChatList> {
                                 ),
                               ),
                             ).then((_) {
-                              // Refresh the list when coming back from chat screen
                               setState(() {});
                             });
                           },

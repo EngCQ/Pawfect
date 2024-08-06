@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_assignment/views/adopter/adopters_appointment.dart';
 import 'package:intl/intl.dart';
 
 class HomePost extends StatefulWidget {
@@ -245,9 +246,15 @@ class _HomePostState extends State<HomePost> {
                       final user = FirebaseAuth.instance.currentUser;
                       if (user != null) {
                         final uid = user.uid;
-                        await FirebaseFirestore.instance
+                        final bookingRef = FirebaseFirestore.instance
                             .collection('bookings')
-                            .add({
+                            .doc();  // Create a document reference with a new ID
+                        
+                        // Format the date as "yyyy-MM-dd"
+                        final String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate!);
+                        
+                        await bookingRef.set({
+                          'bookingsId': bookingRef.id,  // Include the booking ID
                           'uid': uid,
                           'postName': widget.postName,
                           'postImage': widget.postImage,
@@ -259,7 +266,7 @@ class _HomePostState extends State<HomePost> {
                           'species': widget.species,
                           'fee': widget.fee,
                           'phoneNumber': phoneNumber,
-                          'date': selectedDate,
+                          'postDate': formattedDate,  // Store the formatted date
                           'time': selectedTime!.format(context),
                           'notes': notes,
                         });
@@ -268,10 +275,15 @@ class _HomePostState extends State<HomePost> {
                           const SnackBar(content: Text('Booked successfully')),
                         );
                         Navigator.of(context).pop();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => AdoptersAppointment(),
+                          ),
+                        );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text(
+                              content: Text(  
                                   'You need to be logged in to book posts')),
                         );
                       }

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:intl_phone_field/phone_number.dart';
 import 'package:logger/logger.dart';
 import '../../../models/user_model.dart';
 
@@ -19,6 +20,8 @@ class AdminUserManagementViewModel extends ChangeNotifier {
   ImageSource _imageSource = ImageSource.gallery;
   bool _isLoading = false;
   String? emailError;
+  String? fullNameError;
+  String? phoneError;
   final logger = Logger(); // Initialize logger
   
   String? _phoneNumber;
@@ -54,11 +57,16 @@ class AdminUserManagementViewModel extends ChangeNotifier {
     _imageSource = value;
     notifyListeners();
   }
+  void removeImage() {
+    selectedImage = null;
+    notifyListeners();
+  }
 
   @override
   void dispose() {
     fullNameController.dispose();
     emailController.dispose();
+    
     passwordController.dispose();
     locationController.dispose();
     super.dispose();
@@ -92,8 +100,34 @@ class AdminUserManagementViewModel extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
       emailError = null;
+      fullNameError = null;
+      phoneError = null;
 
       try {
+        // Check if full name is unique
+        QuerySnapshot nameQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .where('fullName', isEqualTo: fullNameController.text)
+            .get();
+        if (nameQuery.docs.isNotEmpty) {
+          isLoading = false;
+          fullNameError = 'Full name is already in use.';
+          notifyListeners();
+          return;
+        }
+
+        // Check if phone number is unique
+        QuerySnapshot phoneQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .where('phoneNumber', isEqualTo: '$_phoneCountryCode $_phoneNumber')
+            .get();
+        if (phoneQuery.docs.isNotEmpty) {
+          isLoading = false;
+          phoneError = 'Phone number is already in use.';
+          notifyListeners();
+          return;
+        }
+
         // Create user with Firebase Auth
         UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text,

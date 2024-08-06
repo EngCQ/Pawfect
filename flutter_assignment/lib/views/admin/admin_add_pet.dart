@@ -53,6 +53,9 @@ class AdminAddPetState extends State<AdminAddPet> {
                           if (value == null || value.isEmpty) {
                             return "Please enter the pet's name";
                           }
+                          if (value.length < 3) {
+                            return 'Pet name must be at least 3 characters long';
+                          }
                           return null;
                         },
                       ),
@@ -101,11 +104,11 @@ class AdminAddPetState extends State<AdminAddPet> {
                         controller: petViewModel.feeController,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Fee',
+                          labelText: 'Fee(RM)',
                         ),
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly,
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                         ],
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -186,13 +189,13 @@ class AdminAddPetState extends State<AdminAddPet> {
                                     icon: const Icon(Icons.photo_album),
                                     label: const Text('Open Gallery'),
                                   ),
-                                  if (petViewModel.selectedImage != null)
-                                    IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () {
-                                        petViewModel.removeImage();
-                                      },
-                                    ),
+                                  // if (petViewModel.selectedImage != null)
+                                  //   IconButton(
+                                  //     icon: const Icon(Icons.delete),
+                                  //     onPressed: () {
+                                  //       petViewModel.removeImage();
+                                  //     },
+                                  //   ),
                                 ],
                               )
                             ],
@@ -204,28 +207,44 @@ class AdminAddPetState extends State<AdminAddPet> {
                         child: SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: petViewModel.isLoading ? null : () async {
-                              if (petViewModel.formKeyInstance.currentState!.validate()) {
-                                petViewModel.setLoading(true);
+                            onPressed: petViewModel.isLoading
+                                ? null
+                                : () async {
+                                    if (petViewModel.formKeyInstance.currentState!.validate()) {
+                                      // Print statements for each field
+                                      print('Pet Seller UID: ${widget.sellerUid}');
+                                      print("Pet's Name: ${petViewModel.nameController.text}");
+                                      print('Species: ${petViewModel.species}');
+                                      print('Purpose: ${petViewModel.purpose}');
+                                      print('Fee: ${petViewModel.feeController.text}');
+                                      print('Location: ${petViewModel.locationController.text}');
+                                      print('Descriptions: ${petViewModel.descriptionController.text}');
+                                      if (petViewModel.selectedImage != null) {
+                                        print('Image Selected');
+                                      } else {
+                                        print('No Image Selected');
+                                      }
 
-                                bool success = await petViewModel.submitForm();
+                                      petViewModel.setLoading(true);
 
-                                petViewModel.setLoading(false);
+                                      bool success = await petViewModel.submitForm();
 
-                                if (!mounted) return; // Check if the widget is still mounted
+                                      petViewModel.setLoading(false);
 
-                                if (success) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Pet added successfully!')),
-                                  );
-                                  Navigator.pop(context);
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Failed to add pet. Please try again.')),
-                                  );
-                                }
-                              }
-                            },
+                                      if (!mounted) return; // Check if the widget is still mounted
+
+                                      if (success) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(content: Text('Pet added successfully!')),
+                                        );
+                                        Navigator.pop(context);
+                                      } else {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(content: Text('Failed to add pet. Please try again.')),
+                                        );
+                                      }
+                                    }
+                                  },
                             child: petViewModel.isLoading
                                 ? const CircularProgressIndicator(
                                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),

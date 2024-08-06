@@ -71,29 +71,29 @@ class DrawerAdmin extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.calendar_today),
             title: const Text('Appointment Management'),
-            // selected: currentRoute == AppRoutes.adminAppoManagement,
-            // selectedTileColor: Colors.black12,
-            // onTap: () {
-            //   if (currentRoute != AppRoutes.adminAppoManagement) {
-            //     Navigator.pushNamed(context, AppRoutes.adminAppoManagement);
-            //   } else {
-            //     Navigator.pop(context);
-            //   }
-            // },
+            selected: currentRoute == AppRoutes.adminAppoManagement,
+            selectedTileColor: Colors.black12,
+            onTap: () {
+              if (currentRoute != AppRoutes.adminAppoManagement) {
+                Navigator.pushNamed(context, AppRoutes.adminAppoManagement);
+              } else {
+                Navigator.pop(context);
+              }
+            },
           ),
           ListTile(
             leading: const Icon(Icons.feedback),
             title: const Text('Feedbacks'),
-            // selected: currentRoute == AppRoutes.feedbacks,
-            // selectedTileColor: Colors.black12,
-            // onTap: () {
-            //   // Navigate to Feedbacks page
-            //   if (currentRoute != AppRoutes.feedbacks) {
-            //     Navigator.pushNamed(context, AppRoutes.feedbacks);
-            //   } else {
-            //     Navigator.pop(context);
-            //   }
-            // },
+            selected: currentRoute == AppRoutes.adminFeedbacks,
+            selectedTileColor: Colors.black12,
+            onTap: () {
+              // Navigate to Feedbacks page
+              if (currentRoute != AppRoutes.adminFeedbacks) {
+                Navigator.pushNamed(context, AppRoutes.adminFeedbacks);
+              } else {
+                Navigator.pop(context);
+              }
+            },
           ),
           SwitchListTile(
             title: const Text('Dark Mode'),

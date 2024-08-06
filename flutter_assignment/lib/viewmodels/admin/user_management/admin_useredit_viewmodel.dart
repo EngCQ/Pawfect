@@ -19,6 +19,8 @@ class AdminEditUserViewModel extends ChangeNotifier {
   ImageSource _imageSource = ImageSource.gallery;
   bool _isLoading = false;
   String? _emailError;
+  String? _fullNameError;
+  String? _phoneError;
   String? _profileImageUrl;
 
   String get selectedRole => _selectedRole;
@@ -26,6 +28,8 @@ class AdminEditUserViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   ImageSource get imageSource => _imageSource;
   String? get emailError => _emailError;
+  String? get fullNameError => _fullNameError;
+  String? get phoneError => _phoneError;
   String? get profileImageUrl => _profileImageUrl;
   String? get phoneCountryCode => _phoneCountryCode;
   String? get phoneNumber => _phoneNumber;
@@ -55,6 +59,16 @@ class AdminEditUserViewModel extends ChangeNotifier {
 
   set emailError(String? value) {
     _emailError = value;
+    notifyListeners();
+  }
+
+  set fullNameError(String? value) {
+    _fullNameError = value;
+    notifyListeners();
+  }
+
+  set phoneError(String? value) {
+    _phoneError = value;
     notifyListeners();
   }
 
@@ -121,9 +135,35 @@ class AdminEditUserViewModel extends ChangeNotifier {
     if (formKey.currentState!.validate()) {
       isLoading = true;
       emailError = null;
+      fullNameError = null;
+      phoneError = null;
       notifyListeners();
 
       try {
+        // Check if full name is unique
+        QuerySnapshot nameQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .where('fullName', isEqualTo: fullNameController.text)
+            .get();
+        if (nameQuery.docs.isNotEmpty && nameQuery.docs.first.id != userId) {
+          isLoading = false;
+          fullNameError = 'Full name is already in use.';
+          notifyListeners();
+          return;
+        }
+
+        // Check if phone number is unique
+        QuerySnapshot phoneQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .where('phoneNumber', isEqualTo: '$_phoneCountryCode $_phoneNumber')
+            .get();
+        if (phoneQuery.docs.isNotEmpty && phoneQuery.docs.first.id != userId) {
+          isLoading = false;
+          phoneError = 'Phone number is already in use.';
+          notifyListeners();
+          return;
+        }
+
         String? imageUrl;
         if (selectedImage != null) {
           imageUrl = await uploadImage(selectedImage!);

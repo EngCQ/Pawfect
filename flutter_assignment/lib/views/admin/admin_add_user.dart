@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_assignment/viewmodels/admin/user_management/admin_useradd_viewmodel.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +53,8 @@ class AdminAddUser extends StatelessWidget {
                                 children: [
                                   TextButton.icon(
                                     onPressed: () {
-                                      viewModel.imageSource = ImageSource.camera;
+                                      viewModel.imageSource =
+                                          ImageSource.camera;
                                       viewModel.getImage();
                                     },
                                     icon: const Icon(Icons.camera),
@@ -60,12 +62,20 @@ class AdminAddUser extends StatelessWidget {
                                   ),
                                   TextButton.icon(
                                     onPressed: () {
-                                      viewModel.imageSource = ImageSource.gallery;
+                                      viewModel.imageSource =
+                                          ImageSource.gallery;
                                       viewModel.getImage();
                                     },
                                     icon: const Icon(Icons.photo_album),
                                     label: const Text('Open Gallery'),
                                   ),
+                                   if (viewModel.selectedImage != null)
+                                    IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () {
+                                        viewModel.removeImage();
+                                      },
+                                    ),
                                 ],
                               )
                             ],
@@ -75,13 +85,17 @@ class AdminAddUser extends StatelessWidget {
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: viewModel.fullNameController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Full Name',
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
+                          errorText: viewModel.fullNameError,
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter the full name';
+                          }
+                          if (value.length < 3) {
+                            return 'Full Name must be at least 3 characters long';
                           }
                           return null;
                         },
@@ -106,13 +120,15 @@ class AdminAddUser extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       IntlPhoneField(
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Phone Number',
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
+                          errorText: viewModel.phoneError,
                         ),
                         initialCountryCode: 'US',
                         onChanged: (phone) {
-                          viewModel.setPhoneNumber(phone.number, phone.countryCode);
+                          viewModel.setPhoneNumber(
+                              phone.number, phone.countryCode);
                         },
                         validator: (phone) {
                           if (phone == null || phone.completeNumber.isEmpty) {
@@ -120,6 +136,10 @@ class AdminAddUser extends StatelessWidget {
                           }
                           return null;
                         },
+                        inputFormatters: [
+                          FilteringTextInputFormatter
+                              .digitsOnly, // Allow only digits
+                        ],
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
@@ -147,7 +167,8 @@ class AdminAddUser extends StatelessWidget {
                                 ? Icons.visibility
                                 : Icons.visibility_off),
                             onPressed: () {
-                              viewModel.isPasswordVisible = !viewModel.isPasswordVisible;
+                              viewModel.isPasswordVisible =
+                                  !viewModel.isPasswordVisible;
                             },
                           ),
                         ),
@@ -180,7 +201,9 @@ class AdminAddUser extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton(
-                        onPressed: viewModel.isLoading ? null : () => viewModel.submitForm(context),
+                        onPressed: viewModel.isLoading
+                            ? null
+                            : () => viewModel.submitForm(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF0583CB),
                           minimumSize: const Size(double.infinity, 50),
@@ -190,8 +213,8 @@ class AdminAddUser extends StatelessWidget {
                         ),
                         child: viewModel.isLoading
                             ? const CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.white), // Customize the color if needed
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors
+                                    .white), // Customize the color if needed
                               )
                             : const Text(
                                 'ADD USER',

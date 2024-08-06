@@ -34,7 +34,7 @@ class _AdoptersNotificationState extends State<AdoptersNotification> {
     if (currentUser == null) return;
 
     String chatId = currentUser.uid.hashCode <= senderId.hashCode
-        ? '${currentUser.uid}_${senderId}'
+        ? '${currentUser.uid}_$senderId'
         : '${senderId}_${currentUser.uid}';
 
     var messageQuery = await FirebaseFirestore.instance
@@ -118,7 +118,7 @@ class _AdoptersNotificationState extends State<AdoptersNotification> {
                             title: Text(notification['senderName']),
                             subtitle: Text(notification['message']),
                             trailing: !notification['isRead']
-                                ? Icon(Icons.fiber_manual_record,
+                                ? const Icon(Icons.fiber_manual_record,
                                     color: Colors.red)
                                 : null,
                             onTap: () async {

@@ -5,16 +5,23 @@ import 'views/sign_in_screen.dart';
 import 'views/admin/admin_dashboard.dart';
 import 'views/admin/admin_user_management.dart';
 import 'views/admin/admin_pet_management.dart';
+import 'views/admin/admin_booking_management.dart';
 import 'views/admin/admin_add_pet.dart';
+import 'views/admin/admin_add_booking.dart';
+import 'views/admin/admin_pick_seller_booking.dart';
+import 'views/admin/admin_pickpet_booking.dart';
+import 'views/admin/admin_pick_adopter_booking.dart';
+import 'views/admin/admin_feedback.dart';
 
-//Adaptors
+
+// Adopters
 import 'package:flutter_assignment/views/adopter/adopters_chat.dart';
 import 'package:flutter_assignment/views/adopter/adopters_filter.dart';
 import 'package:flutter_assignment/views/adopter/adopters_help.dart';
 import 'package:flutter_assignment/views/adopter/adopters_notification.dart';
-import 'package:flutter_assignment/views/adopter/adopters_post_details.dart';
+//import 'package:flutter_assignment/views/adopter/adopters_post_details.dart';
 import 'package:flutter_assignment/views/adopter/adopters_reminder.dart';
-import 'package:flutter_assignment/views/adopter/adopters_booking_details.dart';
+//import 'package:flutter_assignment/views/adopter/adopters_booking_details.dart';
 import 'package:flutter_assignment/views/adopter/adopters_home.dart';
 import 'package:flutter_assignment/views/adopter/adopters_favourite.dart';
 import 'package:flutter_assignment/views/adopter/adopters_appointment.dart';
@@ -22,7 +29,7 @@ import 'package:flutter_assignment/views/adopter/adopters_chat_list.dart';
 import 'package:flutter_assignment/views/adopter/adopters_profile.dart';
 import 'package:flutter_assignment/views/adopter/adopters_edit_profile.dart';
 
-//Seller
+// Seller
 import 'views/seller/seller_dashboard.dart';
 
 class AppRoutes {
@@ -34,8 +41,15 @@ class AppRoutes {
   static const String adminPetManagement = '/adminPetManagement';
   static const String adminSelectSellerPet = '/adminSelectSellerPet';
   static const String adminAddPet = '/adminAddPet';
+  static const String adminAppoManagement = '/adminAppoManagement';
+  static const String adminAddAppointment = '/adminAddAppointment'; // New route for Add Appointment
+  static const String adminSelectSellerAppointment = '/adminSelectSellerAppo';
+  static const String adminSelectPetForAppoScreen = '/adminSelectPetForAppoScreen';
+  static const String adminSelectAdopterAppointment = '/adminSelectAdopterAppo';
+  static const String adminFeedbacks = '/adminFeedback';
 
-  //Adopter
+
+  // Adopter
   static const String adopterDashboard = '/adopterDashboard';
   static const String adopterFavourite = '/AdoptersFavourite';
   static const String adopterAppointment = '/AdoptersAppointment';
@@ -49,7 +63,8 @@ class AppRoutes {
   static const String adopterHelp = '/help';
   static const String adopterChat = '/AdoptersChat';
   static const String adopterEditProfile = '/AdoptersEditProfile';
-  //Seller
+
+  // Seller
   static const String sellerDashboard = '/sellerDashboard';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -60,7 +75,6 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const SignUpScreen());
       case signIn:
         return MaterialPageRoute(builder: (_) => const SignInScreen());
-
       case adminDashboard:
         return MaterialPageRoute(builder: (_) => const AdminDashboard());
       case adminUserManagement:
@@ -69,14 +83,36 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const AdminPetManagement());
       case adminAddPet:
         final sellerUid = settings.arguments as String;
-        return MaterialPageRoute(
-          builder: (_) => AdminAddPet(sellerUid: sellerUid),
-        );
+        return MaterialPageRoute(builder: (_) => AdminAddPet(sellerUid: sellerUid));
+      case adminAppoManagement:
+        return MaterialPageRoute(builder: (_) => const AdminBookingManagement());
+      case adminAddAppointment:
+         final args = settings.arguments as Map<String, String>;
+        final sellerUid = args['sellerUid']!;
+        final petUid = args['petUid']!;
+        final adopterUid = args['adopterUid']!;
+        return MaterialPageRoute(builder: (_) => AdminAddAppointment(sellerUid: sellerUid, petUid: petUid, adopterUid: adopterUid, )); 
 
-      //Adopter
+      case adminSelectSellerAppointment:
+        return MaterialPageRoute(builder: (_) => const AdminSelectSellerForAppoScreen());
+
+      case adminSelectAdopterAppointment:
+        final args = settings.arguments as Map<String, dynamic>;
+        final sellerUid = args['sellerUid'] as String;
+        final petUid = args['petUid'] as String;
+        return MaterialPageRoute(builder: (_) => AdminSelectAdopterForAppoScreen(sellerUid: sellerUid, petUid: petUid));
+
+      case adminSelectPetForAppoScreen :
+        final sellerUid = settings.arguments as String;
+        return MaterialPageRoute(builder: (_) => AdminSelectPetForAppoScreen(sellerUid: sellerUid));
+
+      case adminFeedbacks:
+        return MaterialPageRoute(builder: (_) => const AdminFeedbackManagement());
+      
+      // Adopter
+
       case adopterDashboard:
-        return MaterialPageRoute(
-            builder: (_) => const AdoptersHome(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const AdoptersHome(), settings: settings);
       case adopterFavourite:
         return MaterialPageRoute(builder: (_) => const AdoptersFavourite());
       case adopterAppointment:
@@ -88,8 +124,7 @@ class AppRoutes {
       case adopterEditProfile:
         final args = settings.arguments as Map<String, dynamic>;
         final userId = args['userId'] as String;
-        return MaterialPageRoute(
-            builder: (_) => AdopterEditProfile(userId: userId));
+        return MaterialPageRoute(builder: (_) => AdopterEditProfile(userId: userId));
       // case adopterPostDetails:
       //   final detailsArgs = settings.arguments as Map<String, dynamic>;
       //   return MaterialPageRoute(
@@ -105,7 +140,6 @@ class AppRoutes {
       //       postFees: detailsArgs['postFees'],
       //     ),
       //   );
-
       // case adopterBookingDetails:
       //   final args = settings.arguments as Map<String, dynamic>;
       //   return MaterialPageRoute(
@@ -139,11 +173,9 @@ class AppRoutes {
             userImage: args['userImage'],
           ),
         );
-
-      //Seller
+      // Seller
       case sellerDashboard:
         return MaterialPageRoute(builder: (_) => const SellerDashboard());
-
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

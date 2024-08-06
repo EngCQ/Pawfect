@@ -3,15 +3,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_assignment/viewmodels/user_authentication.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:flutter/services.dart'; // Import for input formatters
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  SignUpScreenState createState() => SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>(); // Form key for validation
   bool _isPasswordVisible = false; // Flag for toggling password visibility
   bool _isConfirmPasswordVisible = false; // Flag for toggling confirm password visibility
@@ -78,13 +79,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   // Full Name field
                   TextFormField(
                     controller: _fullNameController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Full Name',
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
+                      errorText: userAuth.fullNameError,
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return 'Please enter your full name';
+                      }
+                      // Check if the full name contains more than three words
+                       if (value.length < 3) {
+                        return 'Full Name must be at least 3 characters long';
                       }
                       return null;
                     },
@@ -111,9 +117,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(height: 16), // Spacing
                   // Phone Number field with country code
                   IntlPhoneField(
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Phone Number',
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
+                      errorText: userAuth.phoneNumberError,
                     ),
                     initialCountryCode: 'US',
                     onChanged: (phone) {
@@ -126,6 +133,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       }
                       return null;
                     },
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly, // Allow only digits
+                    ],
                   ),
                   const SizedBox(height: 16), // Spacing
                   // Location field
@@ -208,7 +218,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       border: OutlineInputBorder(),
                     ),
                     value: _selectedRole,
-                    items: ['Adopter', 'Seller','Admin']
+                    items: ['Adopter', 'Seller', 'Admin']
                         .map((role) => DropdownMenuItem<String>(
                               value: role,
                               child: Text(role),

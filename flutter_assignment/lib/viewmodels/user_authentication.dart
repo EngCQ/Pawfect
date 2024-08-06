@@ -15,13 +15,27 @@ class UserAuthentication extends ChangeNotifier {
   UserModel? _userModel;
   File? _selectedImage;
   bool _isLoading = false;
-  String? _emailError;
 
+  // Error messages
+  String? _fullNameError;
+  String? _emailError;
+  String? _phoneNumberError;
+
+  // Getters
   User? get user => _user;
   UserModel? get userModel => _userModel;
   File? get selectedImage => _selectedImage;
   bool get isLoading => _isLoading;
+  String? get fullNameError => _fullNameError;
   String? get emailError => _emailError;
+  String? get phoneNumberError => _phoneNumberError;
+
+  void clearErrors() {
+    _fullNameError = null;
+    _emailError = null;
+    _phoneNumberError = null;
+    notifyListeners();
+  }
 
   Map<String, dynamic>? get userDetails => _userModel?.toMap();
 
@@ -30,8 +44,19 @@ class UserAuthentication extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Setters for errors
+  void setFullNameError(String? error) {
+    _fullNameError = error;
+    notifyListeners();
+  }
+
   void setEmailError(String? error) {
     _emailError = error;
+    notifyListeners();
+  }
+
+  void setPhoneNumberError(String? error) {
+    _phoneNumberError = error;
     notifyListeners();
   }
 
@@ -53,13 +78,6 @@ class UserAuthentication extends ChangeNotifier {
               .doc(user.uid)
               .update({'isOnline': true});
           notifyListeners();
-        } else {
-          // If the user doesn't exist in Firestore, sign them out
-          await _firebaseAuth.signOut();
-          throw FirebaseAuthException(
-            code: 'user-not-found',
-            message: 'User not registered in the system.',
-          );
         }
       }
     } on FirebaseAuthException catch (e) {
@@ -104,9 +122,33 @@ class UserAuthentication extends ChangeNotifier {
       String phoneNumber,
       VoidCallback onSuccess) async {
     toggleLoading(true);
+    setFullNameError(null);
     setEmailError(null);
+    setPhoneNumberError(null);
 
     try {
+      // Check if full name is unique
+      QuerySnapshot nameQuery = await _firestore
+          .collection('users')
+          .where('fullName', isEqualTo: fullName)
+          .get();
+      if (nameQuery.docs.isNotEmpty) {
+        setFullNameError('Full name is already in use.');
+        toggleLoading(false);
+        return;
+      }
+
+      // Check if phone number is unique
+      QuerySnapshot phoneQuery = await _firestore
+          .collection('users')
+          .where('phoneNumber', isEqualTo: phoneNumber)
+          .get();
+      if (phoneQuery.docs.isNotEmpty) {
+        setPhoneNumberError('Phone number is already in use.');
+        toggleLoading(false);
+        return;
+      }
+
       UserCredential userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
       User? user = userCredential.user;
@@ -148,11 +190,13 @@ class UserAuthentication extends ChangeNotifier {
           break;
         default:
           print('Error occurred: $e');
+          setEmailError('An error occurred. Please try again.');
           break;
       }
       toggleLoading(false);
     } catch (e) {
       print('Error occurred: $e');
+      setEmailError('An error occurred. Please try again.');
       toggleLoading(false);
     }
   }

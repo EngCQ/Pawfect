@@ -111,9 +111,9 @@ class AdminEditPetScreen extends StatelessWidget {
                           border: OutlineInputBorder(),
                           labelText: 'Fee',
                         ),
-                        keyboardType: TextInputType.number,
+                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly,
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                         ],
                         validator: (value) {
                           if (value == null || value.isEmpty) {

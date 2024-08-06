@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment/routes.dart';
-import 'package:flutter_assignment/views/adopter/adopter_dashboard.dart';
+//import 'package:flutter_assignment/views/adopter/adopter_dashboard.dart';
 import 'package:flutter_assignment/views/adopter/adopters_home.dart';
 import 'package:flutter_assignment/views/adopter/adopters_profile.dart';
 import 'package:flutter_assignment/views/adopter/default/adopters_app_color.dart';
@@ -22,7 +22,7 @@ class AdoptersNavigationBar extends StatelessWidget {
             scale: 0.75,
             child: IconButton(
               onPressed: () {
-                if (ModalRoute.of(context)?.settings.name != AdoptersHome()) {
+                if (ModalRoute.of(context)?.settings.name != const AdoptersHome()) {
                   Navigator.pushReplacementNamed(
                       context, AppRoutes.adopterDashboard);
                 }

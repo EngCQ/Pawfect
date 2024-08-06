@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -20,37 +18,25 @@ class AdoptersHome extends StatefulWidget {
 class _AdoptersHomeState extends State<AdoptersHome> {
   List<DocumentSnapshot> posts = [];
   List<DocumentSnapshot> reminders = [];
-  List<String> favoritePostNames = [];
+  List<String> favoritePostIds = [];
 
   @override
   void initState() {
     super.initState();
     tz.initializeTimeZones();
-    final userUid = Provider.of<UserAuthentication>(context, listen: false)
-            .userDetails?['uid'] ??
-        '';
-    _getFavoritePostNames(userUid);
+    final userUid = Provider.of<UserAuthentication>(context, listen: false).userDetails?['uid'] ?? '';
+    _getFavoritePostIds(userUid);
     fetchReminders(userUid);
   }
 
-  Future<String> _getImageUrl(String imagePath) async {
-    try {
-      return await FirebaseStorage.instance.ref(imagePath).getDownloadURL();
-    } catch (e) {
-      print("Error fetching image URL: $e");
-      return '';
-    }
-  }
-
-  Future<void> _getFavoritePostNames(String uid) async {
+  Future<void> _getFavoritePostIds(String uid) async {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('favorites')
         .where('uid', isEqualTo: uid)
         .get();
 
     setState(() {
-      favoritePostNames =
-          querySnapshot.docs.map((doc) => doc['postName'] as String).toList();
+      favoritePostIds = querySnapshot.docs.map((doc) => doc['postId'] as String).toList();
     });
   }
 
@@ -94,8 +80,7 @@ class _AdoptersHomeState extends State<AdoptersHome> {
             reminderTime.minute,
           );
 
-          if (reminderDateTime.isBefore(now) &&
-              reminderDateTime.add(const Duration(minutes: 5)).isAfter(now)) {
+          if (reminderDateTime.isBefore(now) && reminderDateTime.add(Duration(minutes: 1)).isAfter(now)) {
             matchingReminders.add(reminder);
             break;
           }
@@ -113,49 +98,20 @@ class _AdoptersHomeState extends State<AdoptersHome> {
         .collection('reminders')
         .doc(reminderId)
         .delete();
-    final userUid = Provider.of<UserAuthentication>(context, listen: false)
-            .userDetails?['uid'] ??
-        '';
+    final userUid = Provider.of<UserAuthentication>(context, listen: false).userDetails?['uid'] ?? '';
     fetchReminders(userUid);
-  }
-
-  Future<void> _addFavoritePost(String postName, String uid) async {
-    await FirebaseFirestore.instance.collection('favorites').add({
-      'uid': uid,
-      'postName': postName,
-    });
-    _getFavoritePostNames(uid); // Refresh favorite posts
-  }
-
-  void _removeFavoritePost(String postName, String uid) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('favorites')
-        .where('uid', isEqualTo: uid)
-        .where('postName', isEqualTo: postName)
-        .get();
-
-    for (var doc in querySnapshot.docs) {
-      await FirebaseFirestore.instance
-          .collection('favorites')
-          .doc(doc.id)
-          .delete();
-    }
-    _getFavoritePostNames(uid);
   }
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
     final searchText = args?['searchText'] ?? '';
     final searchAdoption = args?['searchAdoption'] ?? true;
     final searchMissing = args?['searchMissing'] ?? true;
 
-    final userDetails =
-        Provider.of<UserAuthentication>(context).userDetails ?? {};
-    final userEmail = userDetails['email'] ?? 'User';
+    final userDetails = Provider.of<UserAuthentication>(context).userDetails ?? {};
     final userName = userDetails['fullName'] ?? 'User';
-    final userUid = userDetails['uid'] ?? '';
+    //final userUid = userDetails['uid'] ?? '';
 
     return Scaffold(
       appBar: const DefaultHeader(),
@@ -168,12 +124,7 @@ class _AdoptersHomeState extends State<AdoptersHome> {
               children: [
                 Text(
                   'Welcome, $userName',
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  userEmail,
-                  style: const TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -198,8 +149,7 @@ class _AdoptersHomeState extends State<AdoptersHome> {
                         children: [
                           Text(
                             reminderData['type'],
-                            style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           Text('Time for ${reminderData['type']}'),
                         ],
@@ -229,40 +179,47 @@ class _AdoptersHomeState extends State<AdoptersHome> {
 
                 posts = snapshot.data!.docs.where((post) {
                   final postPurpose = post['purpose'];
-                  final postUserName = post['petName'];
+                  final postName = post['petName'];
+                  final postId = post.id;
 
-                  final matchesSearchText =
-                      searchText.isEmpty || postUserName.contains(searchText);
-                  final matchesAdoption =
-                      searchAdoption && postPurpose == 'Adoption';
+                  final matchesSearchText = searchText.isEmpty || postName.contains(searchText);
+                  final matchesAdoption = searchAdoption && postPurpose == 'Adoption';
                   final matchesMissing = searchMissing && postPurpose == 'Lost';
-                  final isFavorite = favoritePostNames.contains(postUserName);
+                  final isFavorite = favoritePostIds.contains(postId); // Use postId instead of postName
 
-                  return matchesSearchText &&
-                      (matchesAdoption || matchesMissing) &&
-                      !isFavorite;
+                  return matchesSearchText && (matchesAdoption || matchesMissing) && !isFavorite;
                 }).toList();
 
                 return ListView.builder(
                   itemCount: posts.length,
                   itemBuilder: (context, index) {
                     final post = posts[index];
-                    final imageUrl = post['imageUrl'] ?? '';
+                    final postData = post.data() as Map<String, dynamic>;
+                    final postId = post.id;
+                    final postName = postData['petName'];
+                    final imageUrl = postData['imageUrl'] ?? '';
 
                     return HomePost(
-                      postName: post['petName'],
+                      // postId: postId, // Pass the document ID here
+                      postName: postName,
                       postImage: imageUrl,
-                      postPetName: post['petName'],
-                      postPurpose: post['purpose'],
-                      postDescription: post['description'],
-                      sellerUid: post['sellerUid'],
-                      location: post['location'],
-                      species: post['species'],
-                      fee: post['fee'],
-                      onFavorite: () =>
-                          _addFavoritePost(post['petName'], userUid),
-                      onUnfavorite: () =>
-                          _removeFavoritePost(post['petName'], userUid),
+                      postPetName: postName,
+                      postPurpose: postData['purpose'],
+                      postDescription: postData['description'],
+                      sellerUid: postData['sellerUid'], // Pass the sellerUid here
+                      location: postData['location'],
+                      species: postData['species'],
+                      fee: postData['fee'],
+                      onFavorite: () {
+                        setState(() {
+                          favoritePostIds.add(postId);
+                        });
+                      },
+                      onUnfavorite: () {
+                        setState(() {
+                          favoritePostIds.remove(postId);
+                        });
+                      },
                     );
                   },
                 );
