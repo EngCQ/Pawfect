@@ -33,19 +33,21 @@ class SellersNavigationBar extends StatelessWidget {
             scale: 1,
             child: IconButton(
               onPressed: () {
-                if (ModalRoute.of(context)?.settings.name != SellerPetManagement()) {
+                if (ModalRoute.of(context)?.settings.name !=
+                    SellerPetManagement()) {
                   Navigator.pushReplacementNamed(
                       context, AppRoutes.sellerPetManagement);
                 }
               },
-              icon: Image.asset("assets/paw.png"),
+              icon: Image.asset("assets/bell.png"),
             ),
           ),
           Transform.scale(
             scale: 1,
             child: IconButton(
               onPressed: () {
-                if (ModalRoute.of(context)?.settings.name != SellersAppointment()) {
+                if (ModalRoute.of(context)?.settings.name !=
+                    SellersAppointment()) {
                   Navigator.pushReplacementNamed(
                       context, AppRoutes.sellerAppointment);
                 }
@@ -57,7 +59,8 @@ class SellersNavigationBar extends StatelessWidget {
             scale: 0.8,
             child: IconButton(
               onPressed: () {
-                if (ModalRoute.of(context)?.settings.name != SellersChatList()) {
+                if (ModalRoute.of(context)?.settings.name !=
+                    SellersChatList()) {
                   Navigator.pushReplacementNamed(
                       context, AppRoutes.sellerChatList);
                 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment/routes.dart';
-import 'package:flutter_assignment/views/seller/sellers_app_color.dart'; 
+import 'package:flutter_assignment/views/seller/sellers_app_color.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class SellersDefaultHeader extends StatefulWidget implements PreferredSizeWidget { 
+class SellersDefaultHeader extends StatefulWidget
+    implements PreferredSizeWidget {
   const SellersDefaultHeader({super.key});
 
   @override
@@ -15,28 +17,52 @@ class SellersDefaultHeader extends StatefulWidget implements PreferredSizeWidget
 
 class _SellersDefaultHeaderState extends State<SellersDefaultHeader> {
   bool hasNotification = false;
+  User? user;
 
   @override
   void initState() {
     super.initState();
-    final userUid = 'USER_UID'; // Replace with logic to fetch actual seller UID
-    FirebaseFirestore.instance
-        .collection('notifications')
-        .where('receiverUid', isEqualTo: userUid)
-        .snapshots()
-        .listen((event) {
-      if (event.docs.isNotEmpty) {
-        setState(() {
-          hasNotification = true;
-        });
-      }
-    });
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      listenForUnreadNotifications();
+    } else {
+      print("No user is currently logged in.");
+    }
+  }
+
+  void listenForUnreadNotifications() {
+    if (user != null) {
+      print("Listening for unread notifications for user: ${user!.uid}");
+      FirebaseFirestore.instance
+          .collection('notifications')
+          .where('receiverId', isEqualTo: user!.uid)
+          .where('isRead', isEqualTo: false)
+          .snapshots()
+          .listen((event) {
+        if (event.docs.isNotEmpty) {
+          print("Unread notifications found: ${event.docs.length}");
+          setState(() {
+            hasNotification = true;
+          });
+        } else {
+          print("No unread notifications.");
+          setState(() {
+            hasNotification = false;
+          });
+        }
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: AppColor.secondColor, // Ensure this is updated in sellers_app_color.dart
+      backgroundColor: AppColor
+          .secondColor, // Ensure this is updated in sellers_app_color.dart
       automaticallyImplyLeading: false,
       title: const Text(
         "PawFect",
@@ -53,8 +79,10 @@ class _SellersDefaultHeaderState extends State<SellersDefaultHeader> {
             IconButton(
               onPressed: () {
                 if (ModalRoute.of(context)?.settings.name !=
-                    AppRoutes.sellerNotification) { // Updated route
-                  Navigator.pushNamed(context, AppRoutes.sellerNotification); // Updated route
+                    AppRoutes.sellerNotification) {
+                  // Updated route
+                  Navigator.pushNamed(
+                      context, AppRoutes.sellerNotification); // Updated route
                 }
               },
               icon: Image.asset("assets/bell.png"),
