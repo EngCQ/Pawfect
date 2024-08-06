@@ -6,23 +6,29 @@ import 'components/home_post.dart';
 import 'default/adopters_default_header.dart';
 import 'default/adopters_design.dart';
 import 'default/adopters_navigation_bar.dart';
- 
+
 class AdoptersFavourite extends StatefulWidget {
-  const AdoptersFavourite({Key? key}) : super(key: key);
- 
+  const AdoptersFavourite({super.key});
+
   @override
   _AdoptersFavouriteState createState() => _AdoptersFavouriteState();
 }
- 
+
 class _AdoptersFavouriteState extends State<AdoptersFavourite> {
   List<DocumentSnapshot> favoritePosts = [];
- 
+
   void _removeFavoritePost(String postName) {
     setState(() {
       favoritePosts.removeWhere((post) => post['postName'] == postName);
     });
   }
- 
+
+  void _removeBookedPost(String postName) {
+    setState(() {
+      favoritePosts.removeWhere((post) => post['postName'] == postName);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +38,7 @@ class _AdoptersFavouriteState extends State<AdoptersFavourite> {
           if (provider.userDetails == null) {
             return const Center(child: CircularProgressIndicator());
           }
- 
+
           return StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('favorites')
@@ -42,13 +48,13 @@ class _AdoptersFavouriteState extends State<AdoptersFavourite> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
- 
+
               if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               }
- 
+
               favoritePosts = snapshot.data!.docs;
- 
+
               if (favoritePosts.isEmpty) {
                 return Center(
                   child: Text(
@@ -57,7 +63,7 @@ class _AdoptersFavouriteState extends State<AdoptersFavourite> {
                   ),
                 );
               }
- 
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -89,6 +95,7 @@ class _AdoptersFavouriteState extends State<AdoptersFavourite> {
                             // Optionally handle the favorite action if needed
                           },
                           onUnfavorite: () => _removeFavoritePost(data['postName']),
+                          onBook: () => _removeBookedPost(data['postName']), // Add this callback
                           showBookButton: true, // Show the Book button in favorites
                         );
                       },
@@ -104,4 +111,3 @@ class _AdoptersFavouriteState extends State<AdoptersFavourite> {
     );
   }
 }
- 

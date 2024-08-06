@@ -21,6 +21,12 @@ class SignInScreenState extends State<SignInScreen> {
   // final TextEditingController _emailController = TextEditingController(text: "adopter1@gmail.com");
   // final TextEditingController _passwordController = TextEditingController(text: "111111");
 
+  //email and password for adopters robo test
+  // final TextEditingController _emailController =
+  //     TextEditingController(text: 'ecq@gmail.com');
+  // final TextEditingController _passwordController =
+  //     TextEditingController(text: 'ecq123');
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -53,7 +59,8 @@ class SignInScreenState extends State<SignInScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Sign In successful!'),
-                  duration: Duration(seconds: 1), // Set the duration for 1 second
+                  duration:
+                      Duration(seconds: 1), // Set the duration for 1 second
                 ),
               );
 
@@ -95,7 +102,8 @@ class SignInScreenState extends State<SignInScreen> {
     }
 
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text);
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: _emailController.text);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Password reset email sent! Check your inbox.'),
@@ -130,7 +138,8 @@ class SignInScreenState extends State<SignInScreen> {
                 children: [
                   // App logo
                   Center(
-                    child: Image.asset('assets/logo.png', width: 200, height: 200),
+                    child:
+                        Image.asset('assets/logo.png', width: 200, height: 200),
                   ),
                   const SizedBox(height: 24), // Spacing
                   const Center(
@@ -151,6 +160,7 @@ class SignInScreenState extends State<SignInScreen> {
                   const SizedBox(height: 16), // Spacing
                   // Email field
                   TextFormField(
+                    // readOnly: true,
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
@@ -170,6 +180,7 @@ class SignInScreenState extends State<SignInScreen> {
                   const SizedBox(height: 16), // Spacing
                   // Password field
                   TextFormField(
+                    // readOnly: true,
                     controller: _passwordController,
                     obscureText: !_isPasswordVisible,
                     decoration: InputDecoration(
@@ -177,7 +188,9 @@ class SignInScreenState extends State<SignInScreen> {
                       border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                         ),
                         onPressed: () {
                           setState(() {

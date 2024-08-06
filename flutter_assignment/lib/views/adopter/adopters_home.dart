@@ -19,6 +19,7 @@ class _AdoptersHomeState extends State<AdoptersHome> {
   List<DocumentSnapshot> posts = [];
   List<DocumentSnapshot> reminders = [];
   List<String> favoritePostIds = [];
+  List<String> bookedPostIds = [];
 
   @override
   void initState() {
@@ -26,6 +27,7 @@ class _AdoptersHomeState extends State<AdoptersHome> {
     tz.initializeTimeZones();
     final userUid = Provider.of<UserAuthentication>(context, listen: false).userDetails?['uid'] ?? '';
     _getFavoritePostIds(userUid);
+    _getBookedPostIds(userUid);
     fetchReminders(userUid);
   }
 
@@ -37,6 +39,17 @@ class _AdoptersHomeState extends State<AdoptersHome> {
 
     setState(() {
       favoritePostIds = querySnapshot.docs.map((doc) => doc['postId'] as String).toList();
+    });
+  }
+
+  Future<void> _getBookedPostIds(String uid) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('bookings')
+        .where('uid', isEqualTo: uid)
+        .get();
+
+    setState(() {
+      bookedPostIds = querySnapshot.docs.map((doc) => doc['postName'] as String).toList(); // Changed to postName
     });
   }
 
@@ -63,7 +76,7 @@ class _AdoptersHomeState extends State<AdoptersHome> {
         'Thursday',
         'Friday',
         'Saturday'
-      ][dayOfWeek % 7]);
+      ][dayOfWeek - 1]); // Corrected indexing for days of the week
 
       if (dayMatches) {
         for (var time in times) {
@@ -80,7 +93,7 @@ class _AdoptersHomeState extends State<AdoptersHome> {
             reminderTime.minute,
           );
 
-          if (reminderDateTime.isBefore(now) && reminderDateTime.add(Duration(minutes: 1)).isAfter(now)) {
+          if (reminderDateTime.isBefore(now) && reminderDateTime.add(const Duration(minutes: 1)).isAfter(now)) {
             matchingReminders.add(reminder);
             break;
           }
@@ -111,7 +124,6 @@ class _AdoptersHomeState extends State<AdoptersHome> {
 
     final userDetails = Provider.of<UserAuthentication>(context).userDetails ?? {};
     final userName = userDetails['fullName'] ?? 'User';
-    //final userUid = userDetails['uid'] ?? '';
 
     return Scaffold(
       appBar: const DefaultHeader(),
@@ -186,8 +198,9 @@ class _AdoptersHomeState extends State<AdoptersHome> {
                   final matchesAdoption = searchAdoption && postPurpose == 'Adoption';
                   final matchesMissing = searchMissing && postPurpose == 'Lost';
                   final isFavorite = favoritePostIds.contains(postId); // Use postId instead of postName
+                  final isBooked = bookedPostIds.contains(postName); // Changed to postName to match booking logic
 
-                  return matchesSearchText && (matchesAdoption || matchesMissing) && !isFavorite;
+                  return matchesSearchText && (matchesAdoption || matchesMissing) && !isFavorite && !isBooked;
                 }).toList();
 
                 return ListView.builder(
@@ -200,7 +213,6 @@ class _AdoptersHomeState extends State<AdoptersHome> {
                     final imageUrl = postData['imageUrl'] ?? '';
 
                     return HomePost(
-                      // postId: postId, // Pass the document ID here
                       postName: postName,
                       postImage: imageUrl,
                       postPetName: postName,
@@ -218,6 +230,12 @@ class _AdoptersHomeState extends State<AdoptersHome> {
                       onUnfavorite: () {
                         setState(() {
                           favoritePostIds.remove(postId);
+                        });
+                      },
+                      onBook: () {
+                        setState(() {
+                          bookedPostIds.add(postName); // Changed to postName
+                          posts.removeAt(index); // Remove the booked post from the list
                         });
                       },
                     );

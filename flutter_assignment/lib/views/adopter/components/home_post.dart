@@ -16,6 +16,7 @@ class HomePost extends StatefulWidget {
   final String fee;
   final VoidCallback onFavorite;
   final VoidCallback onUnfavorite;
+  final VoidCallback onBook; // Add this callback
   final bool showBookButton;
 
   const HomePost({
@@ -31,6 +32,7 @@ class HomePost extends StatefulWidget {
     required this.fee,
     required this.onFavorite,
     required this.onUnfavorite,
+    required this.onBook, // Add this callback
     this.showBookButton = false,
   });
 
@@ -274,6 +276,7 @@ class _HomePostState extends State<HomePost> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Booked successfully')),
                         );
+                        widget.onBook(); // Notify parent widget of the booking
                         Navigator.of(context).pop();
                         Navigator.of(context).push(
                           MaterialPageRoute(
