@@ -39,7 +39,7 @@ class SellersNavigationBar extends StatelessWidget {
                       context, AppRoutes.sellerPetManagement);
                 }
               },
-              icon: Image.asset("assets/bell.png"),
+              icon: Image.asset("assets/paw.jpg"),
             ),
           ),
           Transform.scale(

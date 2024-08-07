@@ -39,7 +39,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    // _initializeApp();
   }
 
   @override
@@ -49,8 +48,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   // Future<void> _initializeApp() async {
-  //   // await _requestNotificationPermission();
-  //   // await _getToken();
+  //   await _requestNotificationPermission();
+  //   await _getToken();
   //   _configureFirebaseListeners();
   // }
 
@@ -64,15 +63,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   //     provisional: false,
   //     sound: true,
   //   );
-  // }
-
-  // Future<void> _getToken() async {
-  //   try {
-  //     String? fcmToken = await _firebaseMessaging.getToken();
-  //     print("FCM Token: $fcmToken");
-  //   } catch (e) {
-  //     print("Error getting FCM token: $e");
-  //   }
   // }
 
   // void _configureFirebaseListeners() {

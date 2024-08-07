@@ -15,17 +15,14 @@ class SignInScreenState extends State<SignInScreen> {
   bool _isPasswordVisible = false; // Flag for toggling password visibility
   bool _isLoading = false; // Flag for loading state
   String? _errorMessage; // Error message for validation
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  // final TextEditingController _emailController = TextEditingController();
+  // final TextEditingController _passwordController = TextEditingController();
 
-  // final TextEditingController _emailController = TextEditingController(text: "adopter1@gmail.com");
-  // final TextEditingController _passwordController = TextEditingController(text: "111111");
-
-  //email and password for adopters robo test
-  // final TextEditingController _emailController =
-  //     TextEditingController(text: 'ecq@gmail.com');
-  // final TextEditingController _passwordController =
-  //     TextEditingController(text: 'ecq123');
+  // code for robo test
+  final TextEditingController _emailController =
+      TextEditingController(text: "ecq1812@gmail.com");
+  final TextEditingController _passwordController =
+      TextEditingController(text: "ecq123");
 
   @override
   void dispose() {
@@ -160,7 +157,7 @@ class SignInScreenState extends State<SignInScreen> {
                   const SizedBox(height: 16), // Spacing
                   // Email field
                   TextFormField(
-                    // readOnly: true,
+                    readOnly: true,
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
@@ -180,7 +177,7 @@ class SignInScreenState extends State<SignInScreen> {
                   const SizedBox(height: 16), // Spacing
                   // Password field
                   TextFormField(
-                    // readOnly: true,
+                    readOnly: true,
                     controller: _passwordController,
                     obscureText: !_isPasswordVisible,
                     decoration: InputDecoration(

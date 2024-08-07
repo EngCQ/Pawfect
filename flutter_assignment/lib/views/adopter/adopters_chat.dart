@@ -33,7 +33,7 @@ class _AdoptersChatState extends State<AdoptersChat> {
 
     if (currentUser == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('User is not logged in')),
+        SnackBar(content: Text('User is not logged in')),
       );
       return;
     }
@@ -145,8 +145,7 @@ class _AdoptersChatState extends State<AdoptersChat> {
                     var message = messages[index];
                     bool isMe = message['senderId'] == currentUser!.uid;
                     Timestamp? timestamp = message['timestamp'] as Timestamp?;
-                    DateTime? dateTime =
-                        timestamp?.toDate().toLocal(); // Convert to local time
+                    DateTime? dateTime = timestamp?.toDate().toLocal(); // Convert to local time
                     var formattedTime = dateTime != null
                         ? DateFormat('dd MMM yyyy, hh:mm a').format(dateTime)
                         : 'Sending...';
@@ -209,10 +208,10 @@ class _AdoptersChatState extends State<AdoptersChat> {
                     ),
                   ),
                 ),
-                const SizedBox(
+                SizedBox(
                     width: 8.0), // Add spacing between TextField and IconButton
                 IconButton(
-                  icon: const Icon(Icons.send),
+                  icon: Icon(Icons.send),
                   onPressed: sendMessage,
                 ),
               ],

@@ -23,7 +23,7 @@ class EditBookingViewModel extends ChangeNotifier {
         bookingDetails = Booking.fromFirestore(bookingSnapshot);
         dateController.text = bookingDetails!.date;
         timeController.text = bookingDetails!.time;
-        descriptionController.text = bookingDetails!.description;
+        descriptionController.text = bookingDetails!.notes;
         locationController.text = bookingDetails!.location;
       } else {
         print('Booking does not exist!');

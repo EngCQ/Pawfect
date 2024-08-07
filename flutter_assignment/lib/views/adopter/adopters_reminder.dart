@@ -89,15 +89,15 @@ class _AdoptersReminderState extends State<AdoptersReminder> {
                           'uid': user.uid,
                         });
 
-                        // // Add notification
-                        // await _firestore.collection('notifications').add({
-                        //   'senderUid': user.uid,
-                        //   'receiverUid': user.uid,
-                        //   'title': reminderType,
-                        //   'description': 'Remember to $reminderType your pet',
-                        //   'time': DateTime
-                        //       .now(), // Adjust this to the reminder time
-                        // });
+                        // Add notification
+                        await _firestore.collection('notifications').add({
+                          'senderUid': user.uid,
+                          'receiverUid': user.uid,
+                          'title': reminderType,
+                          'description': 'Remember to $reminderType your pet',
+                          'time': DateTime
+                              .now(), // Adjust this to the reminder time
+                        });
 
                         Navigator.of(context).pop();
                       }
@@ -125,14 +125,14 @@ class _AdoptersReminderState extends State<AdoptersReminder> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Delete Reminder'),
-          content: Text('Are you sure you want to delete this reminder?'),
+          title: const Text('Delete Reminder'),
+          content: const Text('Are you sure you want to delete this reminder?'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -142,7 +142,7 @@ class _AdoptersReminderState extends State<AdoptersReminder> {
                     .delete();
                 Navigator.of(context).pop();
               },
-              child: Text('Delete'),
+              child: const Text('Delete'),
             ),
           ],
         );

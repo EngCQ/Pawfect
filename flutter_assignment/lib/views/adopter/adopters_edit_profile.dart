@@ -10,8 +10,7 @@ class AdopterEditProfile extends StatelessWidget {
 
   const AdopterEditProfile({super.key, required this.userId});
 
-  Future<void> _sendPasswordResetLink(
-      BuildContext context, String email) async {
+  Future<void> _sendPasswordResetLink(BuildContext context, String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -82,15 +81,10 @@ class AdopterEditProfile extends StatelessWidget {
                                 backgroundImage: viewModel.selectedImage != null
                                     ? FileImage(viewModel.selectedImage!)
                                     : viewModel.profileImageUrl != null
-                                        ? NetworkImage(
-                                            viewModel.profileImageUrl!)
-                                        : const AssetImage(
-                                                'assets/default_profile.png')
-                                            as ImageProvider,
-                                child: viewModel.selectedImage == null &&
-                                        viewModel.profileImageUrl == null
-                                    ? const Icon(Icons.camera_alt,
-                                        size: 50, color: Colors.white)
+                                        ? NetworkImage(viewModel.profileImageUrl!)
+                                        : const AssetImage('assets/default_profile.png') as ImageProvider,
+                                child: viewModel.selectedImage == null && viewModel.profileImageUrl == null
+                                    ? const Icon(Icons.camera_alt, size: 50, color: Colors.white)
                                     : null,
                               ),
                               Row(
@@ -195,8 +189,7 @@ class AdopterEditProfile extends StatelessWidget {
                               lastSeen: user.lastSeen,
                               phoneNumber: phoneController.text,
                             );
-                            await viewModel.updateUserProfile(
-                                updatedUser, context);
+                            await viewModel.updateUserProfile(updatedUser, context);
                           }
                         },
                         style: ElevatedButton.styleFrom(

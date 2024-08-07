@@ -55,7 +55,7 @@ class SellerPetManagementState extends State<SellerPetManagement> {
                     Row(
                       children: [
                         //Text(userAuth.user!.uid),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 16), 
                         ElevatedButton.icon(
                           onPressed: () async {
                             await Navigator.push(

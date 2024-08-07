@@ -3,14 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AdminDashboardViewModel extends ChangeNotifier {
-  final CollectionReference usersRef =
-      FirebaseFirestore.instance.collection('users');
-  final CollectionReference petsRef =
-      FirebaseFirestore.instance.collection('pets');
-  final CollectionReference appointmentsRef =
-      FirebaseFirestore.instance.collection('bookings');
-  final CollectionReference feedbacksRef =
-      FirebaseFirestore.instance.collection('feedbacks');
+  final CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
+  final CollectionReference petsRef = FirebaseFirestore.instance.collection('pets');
+  final CollectionReference appointmentsRef = FirebaseFirestore.instance.collection('bookings');
+  final CollectionReference feedbacksRef = FirebaseFirestore.instance.collection('feedback');
 
   Stream<int> getTotalUsers() {
     return usersRef.snapshots().map((snapshot) => snapshot.size);
@@ -29,17 +25,11 @@ class AdminDashboardViewModel extends ChangeNotifier {
   }
 
   Stream<int> getTotalAdopters() {
-    return usersRef
-        .where('role', isEqualTo: 'Adopter')
-        .snapshots()
-        .map((snapshot) => snapshot.size);
+    return usersRef.where('role', isEqualTo: 'Adopter').snapshots().map((snapshot) => snapshot.size);
   }
 
   Stream<int> getTotalSellers() {
-    return usersRef
-        .where('role', isEqualTo: 'Seller')
-        .snapshots()
-        .map((snapshot) => snapshot.size);
+    return usersRef.where('role', isEqualTo: 'Seller').snapshots().map((snapshot) => snapshot.size);
   }
 
   Stream<Map<String, int>> getTotalAdoptersAndSellers() {
@@ -52,17 +42,11 @@ class AdminDashboardViewModel extends ChangeNotifier {
   }
 
   Stream<int> getTotalAdoptionPets() {
-    return petsRef
-        .where('purpose', isEqualTo: 'Adoption')
-        .snapshots()
-        .map((snapshot) => snapshot.size);
+    return petsRef.where('purpose', isEqualTo: 'Adoption').snapshots().map((snapshot) => snapshot.size);
   }
 
   Stream<int> getTotalLostPets() {
-    return petsRef
-        .where('purpose', isEqualTo: 'Lost')
-        .snapshots()
-        .map((snapshot) => snapshot.size);
+    return petsRef.where('purpose', isEqualTo: 'Lost').snapshots().map((snapshot) => snapshot.size);
   }
 
   Stream<Map<String, int>> getTotalAdoptionAndLostPets() {

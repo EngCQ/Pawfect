@@ -15,15 +15,13 @@ class SignUpScreen extends StatefulWidget {
 class SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>(); // Form key for validation
   bool _isPasswordVisible = false; // Flag for toggling password visibility
-  bool _isConfirmPasswordVisible =
-      false; // Flag for toggling confirm password visibility
+  bool _isConfirmPasswordVisible = false; // Flag for toggling confirm password visibility
 
   // Controllers for form fields
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   String _selectedRole = 'Adopter'; // Default selected role
 
@@ -59,8 +57,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                 children: [
                   // App logo
                   Center(
-                    child:
-                        Image.asset('assets/logo.png', width: 200, height: 200),
+                    child: Image.asset('assets/logo.png', width: 200, height: 200),
                   ),
                   const SizedBox(height: 24), // Spacing
                   const Center(
@@ -92,7 +89,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                         return 'Please enter your full name';
                       }
                       // Check if the full name contains more than three words
-                      if (value.length < 3) {
+                       if (value.length < 3) {
                         return 'Full Name must be at least 3 characters long';
                       }
                       return null;
@@ -137,8 +134,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       return null;
                     },
                     inputFormatters: [
-                      FilteringTextInputFormatter
-                          .digitsOnly, // Allow only digits
+                      FilteringTextInputFormatter.digitsOnly, // Allow only digits
                     ],
                   ),
                   const SizedBox(height: 16), // Spacing
@@ -166,9 +162,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                          _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                         ),
                         onPressed: () {
                           setState(() {
@@ -197,14 +191,11 @@ class SignUpScreenState extends State<SignUpScreen> {
                       border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _isConfirmPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                          _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
                         ),
                         onPressed: () {
                           setState(() {
-                            _isConfirmPasswordVisible =
-                                !_isConfirmPasswordVisible;
+                            _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
                           });
                         },
                       ),
@@ -227,7 +218,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       border: OutlineInputBorder(),
                     ),
                     value: _selectedRole,
-                    items: ['Adopter', 'Seller']
+                    items: ['Adopter', 'Seller', 'Admin']
                         .map((role) => DropdownMenuItem<String>(
                               value: role,
                               child: Text(role),
@@ -271,19 +262,15 @@ class SignUpScreenState extends State<SignUpScreen> {
                                 onPressed: () {
                                   userAuth.pickImage(ImageSource.camera);
                                 },
-                                icon: const Icon(Icons.camera,
-                                    color: Colors.purple),
-                                label: const Text('Open Camera',
-                                    style: TextStyle(color: Colors.purple)),
+                                icon: const Icon(Icons.camera, color: Colors.purple),
+                                label: const Text('Open Camera', style: TextStyle(color: Colors.purple)),
                               ),
                               TextButton.icon(
                                 onPressed: () {
                                   userAuth.pickImage(ImageSource.gallery);
                                 },
-                                icon: const Icon(Icons.photo_album,
-                                    color: Colors.purple),
-                                label: const Text('Open Gallery',
-                                    style: TextStyle(color: Colors.purple)),
+                                icon: const Icon(Icons.photo_album, color: Colors.purple),
+                                label: const Text('Open Gallery', style: TextStyle(color: Colors.purple)),
                               ),
                             ],
                           )
@@ -307,15 +294,11 @@ class SignUpScreenState extends State<SignUpScreen> {
                                   _locationController.text,
                                   '$_phoneCountryCode $_phoneNumber', // Pass phone number with country code
                                   () {
-                                    userAuth
-                                        .resetSelectedImage(); // Reset the selected image
+                                    userAuth.resetSelectedImage(); // Reset the selected image
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content:
-                                              Text('Registration successful!')),
+                                      const SnackBar(content: Text('Registration successful!')),
                                     );
-                                    Navigator.pushReplacementNamed(
-                                        context, '/signIn');
+                                    Navigator.pushReplacementNamed(context, '/signIn');
                                   },
                                 );
                               }
@@ -329,8 +312,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       ),
                       child: userAuth.isLoading
                           ? const CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                             )
                           : const Text(
                               'Sign Up',
