@@ -137,20 +137,20 @@ class AdminEditBookingState extends State<AdminEditBooking> {
                         },
                         maxLines: 3,
                       ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: editBookingViewModel.locationController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Location',
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a location';
-                          }
-                          return null;
-                        },
-                      ),
+                      // const SizedBox(height: 16),
+                      // TextFormField(
+                      //   controller: editBookingViewModel.locationController,
+                      //   decoration: const InputDecoration(
+                      //     border: OutlineInputBorder(),
+                      //     labelText: 'Location',
+                      //   ),
+                      //   validator: (value) {
+                      //     if (value == null || value.isEmpty) {
+                      //       return 'Please enter a location';
+                      //     }
+                      //     return null;
+                      //   },
+                      // ),
                       const SizedBox(height: 16),
                     ] else
                       const Text('No booking details available.'),

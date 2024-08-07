@@ -23,7 +23,8 @@ class AdminAddAppointmentState extends State<AdminAddAppointment> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = Provider.of<AppointmentViewModel>(context, listen: false);
+      final viewModel =
+          Provider.of<AppointmentViewModel>(context, listen: false);
       viewModel.fetchPetDetails(widget.petUid);
       viewModel.fetchSellerDetails(widget.sellerUid);
     });
@@ -55,7 +56,7 @@ class AdminAddAppointmentState extends State<AdminAddAppointment> {
                         labelText: 'Seller UID',
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    //const SizedBox(height: 16),
                     // if (appointmentViewModel.sellerDetails != null)
                     //   TextFormField(
                     //     initialValue: appointmentViewModel.sellerDetails?.phoneNumber ?? '',

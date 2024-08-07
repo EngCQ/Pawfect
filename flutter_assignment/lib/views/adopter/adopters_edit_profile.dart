@@ -3,11 +3,36 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_assignment/models/user_model.dart';
 import 'package:flutter_assignment/viewmodels/adopter/adopter_editprofile_viewmodel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AdopterEditProfile extends StatelessWidget {
   final String userId;
 
   const AdopterEditProfile({super.key, required this.userId});
+
+  Future<void> _sendPasswordResetLink(
+      BuildContext context, String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password reset email sent! Check your inbox.'),
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message ?? 'An error occurred. Please try again.'),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('An error occurred. Please try again.'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,10 +82,15 @@ class AdopterEditProfile extends StatelessWidget {
                                 backgroundImage: viewModel.selectedImage != null
                                     ? FileImage(viewModel.selectedImage!)
                                     : viewModel.profileImageUrl != null
-                                        ? NetworkImage(viewModel.profileImageUrl!)
-                                        : const AssetImage('assets/default_profile.png') as ImageProvider,
-                                child: viewModel.selectedImage == null && viewModel.profileImageUrl == null
-                                    ? const Icon(Icons.camera_alt, size: 50, color: Colors.white)
+                                        ? NetworkImage(
+                                            viewModel.profileImageUrl!)
+                                        : const AssetImage(
+                                                'assets/default_profile.png')
+                                            as ImageProvider,
+                                child: viewModel.selectedImage == null &&
+                                        viewModel.profileImageUrl == null
+                                    ? const Icon(Icons.camera_alt,
+                                        size: 50, color: Colors.white)
                                     : null,
                               ),
                               Row(
@@ -151,24 +181,6 @@ class AdopterEditProfile extends StatelessWidget {
                         },
                       ),
                       const SizedBox(height: 16),
-                      DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(
-                          labelText: 'Role',
-                          border: OutlineInputBorder(),
-                        ),
-                        value: selectedRole,
-                        items: ['Adopter', 'Seller']
-                            .map((role) => DropdownMenuItem<String>(
-                                  value: role,
-                                  child: Text(role),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          selectedRole = value ?? 'Adopter';
-                          viewModel.selectedRole = selectedRole;
-                        },
-                      ),
-                      const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () async {
                           if (formKey.currentState?.validate() ?? false) {
@@ -183,7 +195,8 @@ class AdopterEditProfile extends StatelessWidget {
                               lastSeen: user.lastSeen,
                               phoneNumber: phoneController.text,
                             );
-                            await viewModel.updateUserProfile(updatedUser, context);
+                            await viewModel.updateUserProfile(
+                                updatedUser, context);
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -201,7 +214,7 @@ class AdopterEditProfile extends StatelessWidget {
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () {
-                          // Handle send password reset link action
+                          _sendPasswordResetLink(context, user.email);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange,

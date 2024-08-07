@@ -46,24 +46,6 @@ class Booking extends StatelessWidget {
             Text('Notes: $notes'),
           ],
         ),
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            AppRoutes.adopterBookingDetails,
-            arguments: {
-              'bookingId': bookingId,
-              'postName': name,
-              'postImage': image,
-              'postPetName': name,
-              'postType': postType,
-              'postDescription': postDescription,
-              'date': date,
-              'time': time,
-              'phoneNumber': phoneNumber,
-              'notes': notes,
-            },
-          );
-        },
       ),
     );
   }

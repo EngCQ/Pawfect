@@ -60,7 +60,8 @@ class SellerEditProfile extends StatelessWidget {
                                 children: [
                                   TextButton.icon(
                                     onPressed: () {
-                                      viewModel.imageSource = ImageSource.camera;
+                                      viewModel.imageSource =
+                                          ImageSource.camera;
                                       viewModel.getImage();
                                     },
                                     icon: const Icon(Icons.camera),
@@ -68,7 +69,8 @@ class SellerEditProfile extends StatelessWidget {
                                   ),
                                   TextButton.icon(
                                     onPressed: () {
-                                      viewModel.imageSource = ImageSource.gallery;
+                                      viewModel.imageSource =
+                                          ImageSource.gallery;
                                       viewModel.getImage();
                                     },
                                     icon: const Icon(Icons.photo_album),
@@ -142,26 +144,28 @@ class SellerEditProfile extends StatelessWidget {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 16),
-                      DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(
-                          labelText: 'Role',
-                          border: OutlineInputBorder(),
-                        ),
-                        value: viewModel.selectedRole,
-                        items: ['Adopter', 'Seller']
-                            .map((role) => DropdownMenuItem<String>(
-                                  value: role,
-                                  child: Text(role),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          viewModel.selectedRole = value!;
-                        },
-                      ),
+                      // const SizedBox(height: 16),
+                      // DropdownButtonFormField<String>(
+                      //   decoration: const InputDecoration(
+                      //     labelText: 'Role',
+                      //     border: OutlineInputBorder(),
+                      //   ),
+                      //   value: viewModel.selectedRole,
+                      //   items: ['Adopter', 'Seller']
+                      //       .map((role) => DropdownMenuItem<String>(
+                      //             value: role,
+                      //             child: Text(role),
+                      //           ))
+                      //       .toList(),
+                      //   onChanged: (value) {
+                      //     viewModel.selectedRole = value!;
+                      //   },
+                      // ),
                       const SizedBox(height: 16),
                       ElevatedButton(
-                        onPressed: viewModel.isLoading ? null : () => viewModel.submitForm(context),
+                        onPressed: viewModel.isLoading
+                            ? null
+                            : () => viewModel.submitForm(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF0583CB),
                           minimumSize: const Size(double.infinity, 50),
@@ -171,10 +175,33 @@ class SellerEditProfile extends StatelessWidget {
                         ),
                         child: viewModel.isLoading
                             ? const CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
                               )
                             : const Text(
                                 'UPDATE PROFILE',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: viewModel.isLoading
+                            ? null
+                            : () => viewModel.sendPasswordResetLink(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          minimumSize: const Size(double.infinity, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        child: viewModel.isLoading
+                            ? const CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              )
+                            : const Text(
+                                'SEND PASSWORD RESET LINK',
                                 style: TextStyle(color: Colors.white),
                               ),
                       ),

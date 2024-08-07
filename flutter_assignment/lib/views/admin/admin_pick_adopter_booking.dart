@@ -6,13 +6,15 @@ class AdminSelectAdopterForAppoScreen extends StatefulWidget {
   final String sellerUid;
   final String petUid;
 
-  const AdminSelectAdopterForAppoScreen({super.key, required this.sellerUid, required this.petUid});
+  const AdminSelectAdopterForAppoScreen(
+      {super.key, required this.sellerUid, required this.petUid});
 
   @override
   SelectAdopterAppoScreenState createState() => SelectAdopterAppoScreenState();
 }
 
-class SelectAdopterAppoScreenState extends State<AdminSelectAdopterForAppoScreen> {
+class SelectAdopterAppoScreenState
+    extends State<AdminSelectAdopterForAppoScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, String>> adopters = [];
   List<Map<String, String>> filteredAdopters = [];
@@ -57,7 +59,8 @@ class SelectAdopterAppoScreenState extends State<AdminSelectAdopterForAppoScreen
         .where('role', isEqualTo: 'Adopter')
         .get();
 
-    final List<Map<String, String>> loadedAdopters = querySnapshot.docs.map((doc) {
+    final List<Map<String, String>> loadedAdopters =
+        querySnapshot.docs.map((doc) {
       return {
         'uid': doc['uid'] as String,
         'fullName': doc['fullName'] as String,
@@ -66,7 +69,8 @@ class SelectAdopterAppoScreenState extends State<AdminSelectAdopterForAppoScreen
 
     setState(() {
       adopters = loadedAdopters;
-      filteredAdopters = adopters; // Initialize filteredAdopters with all adopters initially
+      filteredAdopters =
+          adopters; // Initialize filteredAdopters with all adopters initially
     });
   }
 
@@ -80,7 +84,9 @@ class SelectAdopterAppoScreenState extends State<AdminSelectAdopterForAppoScreen
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select an adopter for seller ${widget.sellerUid}'),
+        backgroundColor: const Color(0xFF0583CB),
+        //title: Text('Select an adopter for seller ${widget.sellerUid}'),
+        title: const Text('Select an adopter for seller'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -112,14 +118,17 @@ class SelectAdopterAppoScreenState extends State<AdminSelectAdopterForAppoScreen
                           onTap: () => _onAdopterTap(adopter),
                           child: Card(
                             color: isSelected
-                                ? const Color.fromARGB(255, 113, 240, 28).withOpacity(0.2)
+                                ? const Color.fromARGB(255, 113, 240, 28)
+                                    .withOpacity(0.2)
                                 : null,
                             margin: const EdgeInsets.symmetric(vertical: 8.0),
                             child: ListTile(
                               leading: CircleAvatar(
                                 backgroundColor: Colors.grey,
                                 child: Text(
-                                  adopter['fullName']!.substring(0, 2).toUpperCase(),
+                                  adopter['fullName']!
+                                      .substring(0, 2)
+                                      .toUpperCase(),
                                   style: const TextStyle(color: Colors.white),
                                 ),
                               ),

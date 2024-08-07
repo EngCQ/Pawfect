@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_assignment/views/admin/admin_viewFeedback.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_assignment/widgets/drawer_admin.dart';
 import 'package:flutter_assignment/viewmodels/user_authentication.dart';
 import 'package:flutter_assignment/viewmodels/admin/feedback_management/admin_feedback_viewmodel.dart';
+import 'package:flutter_assignment/widgets/drawer_admin.dart';
+import 'package:flutter_assignment/views/admin/admin_viewFeedback.dart';
 
 class AdminFeedbackManagement extends StatefulWidget {
   const AdminFeedbackManagement({super.key});
@@ -86,7 +86,6 @@ class AdminFeedbackManagementState extends State<AdminFeedbackManagement> {
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      
                       const SizedBox(width: 16),
                       Expanded(
                         child: TextField(
@@ -121,10 +120,8 @@ class AdminFeedbackManagementState extends State<AdminFeedbackManagement> {
                           final feedback = feedbackViewModel.filteredFeedbacks[index];
                           final feedbackId = feedback.feedbackId;
                           final content = feedback.feedback;
-                          //final purpose = feedback.purpose;
                           final timestamp = feedback.timestamp.toDate();
                           final userEmail = feedback.userEmail;
-                          //final userName = feedback.userName;
 
                           return Card(
                             margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -133,10 +130,12 @@ class AdminFeedbackManagementState extends State<AdminFeedbackManagement> {
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Content: $content'),
-                                  //Text('Purpose: $purpose'),
+                                  Text(
+                                    'Content: $content',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                   Text('Timestamp: $timestamp'),
-                                  //if (userName != null) Text('User: $userName'),
                                   if (userEmail != null) Text('Email: $userEmail'),
                                 ],
                               ),

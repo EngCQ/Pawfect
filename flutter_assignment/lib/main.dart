@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'viewmodels/user_authentication.dart';
 import 'viewmodels/theme_provider.dart';
 import 'routes.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,13 +35,11 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _initializeApp();
+    // _initializeApp();
   }
 
   @override
@@ -51,53 +48,54 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  Future<void> _initializeApp() async {
-    await _requestNotificationPermission();
-    await _getToken();
-    _configureFirebaseListeners();
-  }
+  // Future<void> _initializeApp() async {
+  //   // await _requestNotificationPermission();
+  //   // await _getToken();
+  //   _configureFirebaseListeners();
+  // }
 
-  Future<void> _requestNotificationPermission() async {
-    await _firebaseMessaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-  }
+  // Future<void> _requestNotificationPermission() async {
+  //   await _firebaseMessaging.requestPermission(
+  //     alert: true,
+  //     announcement: false,
+  //     badge: true,
+  //     carPlay: false,
+  //     criticalAlert: false,
+  //     provisional: false,
+  //     sound: true,
+  //   );
+  // }
 
-  Future<void> _getToken() async {
-    try {
-      String? fcmToken = await _firebaseMessaging.getToken();
-      print("FCM Token: $fcmToken");
-    } catch (e) {
-      print("Error getting FCM token: $e");
-    }
-  }
+  // Future<void> _getToken() async {
+  //   try {
+  //     String? fcmToken = await _firebaseMessaging.getToken();
+  //     print("FCM Token: $fcmToken");
+  //   } catch (e) {
+  //     print("Error getting FCM token: $e");
+  //   }
+  // }
 
-  void _configureFirebaseListeners() {
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
+  // void _configureFirebaseListeners() {
+  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //     RemoteNotification? notification = message.notification;
+  //     AndroidNotification? android = message.notification?.android;
 
-      if (notification != null && android != null) {
-        // Display notification
-      }
-    });
+  //     if (notification != null && android != null) {
+  //       // Display notification
+  //     }
+  //   });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-      // Handle notification tap
-    });
-  }
+  //   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //     print('A new onMessageOpenedApp event was published!');
+  //     // Handle notification tap
+  //   });
+  // }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     final userAuth = Provider.of<UserAuthentication>(context, listen: false);
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
       // Update isOnline status to false and set lastSeen to the current timestamp when the app is paused or detached
       userAuth.updateOnlineStatus(false, FieldValue.serverTimestamp());
     } else if (state == AppLifecycleState.resumed) {

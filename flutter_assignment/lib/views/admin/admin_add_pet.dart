@@ -20,6 +20,7 @@ class AdminAddPetState extends State<AdminAddPet> {
       create: (_) => PetViewModel(sellerUid: widget.sellerUid),
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: const Color(0xFF0583CB),
           title: const Text('Add new/lost Pet'),
         ),
         body: Padding(
@@ -73,7 +74,8 @@ class AdminAddPetState extends State<AdminAddPet> {
                         items: const [
                           DropdownMenuItem(value: 'Dog', child: Text('Dog')),
                           DropdownMenuItem(value: 'Cat', child: Text('Cat')),
-                          DropdownMenuItem(value: 'Other', child: Text('Other')),
+                          DropdownMenuItem(
+                              value: 'Other', child: Text('Other')),
                         ],
                         onChanged: (value) {
                           petViewModel.species = value!;
@@ -91,7 +93,8 @@ class AdminAddPetState extends State<AdminAddPet> {
                         ),
                         value: petViewModel.purpose,
                         items: const [
-                          DropdownMenuItem(value: 'Adoption', child: Text('Adoption')),
+                          DropdownMenuItem(
+                              value: 'Adoption', child: Text('Adoption')),
                           DropdownMenuItem(value: 'Lost', child: Text('Lost')),
                         ],
                         onChanged: (value) {
@@ -106,9 +109,11 @@ class AdminAddPetState extends State<AdminAddPet> {
                           border: OutlineInputBorder(),
                           labelText: 'Fee(RM)',
                         ),
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
                         inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+\.?\d{0,2}')),
                         ],
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -175,7 +180,8 @@ class AdminAddPetState extends State<AdminAddPet> {
                                 children: [
                                   TextButton.icon(
                                     onPressed: () {
-                                      petViewModel.imageSource = ImageSource.camera;
+                                      petViewModel.imageSource =
+                                          ImageSource.camera;
                                       petViewModel.getImage();
                                     },
                                     icon: const Icon(Icons.camera),
@@ -183,7 +189,8 @@ class AdminAddPetState extends State<AdminAddPet> {
                                   ),
                                   TextButton.icon(
                                     onPressed: () {
-                                      petViewModel.imageSource = ImageSource.gallery;
+                                      petViewModel.imageSource =
+                                          ImageSource.gallery;
                                       petViewModel.getImage();
                                     },
                                     icon: const Icon(Icons.photo_album),
@@ -210,15 +217,22 @@ class AdminAddPetState extends State<AdminAddPet> {
                             onPressed: petViewModel.isLoading
                                 ? null
                                 : () async {
-                                    if (petViewModel.formKeyInstance.currentState!.validate()) {
+                                    if (petViewModel
+                                        .formKeyInstance.currentState!
+                                        .validate()) {
                                       // Print statements for each field
-                                      print('Pet Seller UID: ${widget.sellerUid}');
-                                      print("Pet's Name: ${petViewModel.nameController.text}");
+                                      print(
+                                          'Pet Seller UID: ${widget.sellerUid}');
+                                      print(
+                                          "Pet's Name: ${petViewModel.nameController.text}");
                                       print('Species: ${petViewModel.species}');
                                       print('Purpose: ${petViewModel.purpose}');
-                                      print('Fee: ${petViewModel.feeController.text}');
-                                      print('Location: ${petViewModel.locationController.text}');
-                                      print('Descriptions: ${petViewModel.descriptionController.text}');
+                                      print(
+                                          'Fee: ${petViewModel.feeController.text}');
+                                      print(
+                                          'Location: ${petViewModel.locationController.text}');
+                                      print(
+                                          'Descriptions: ${petViewModel.descriptionController.text}');
                                       if (petViewModel.selectedImage != null) {
                                         print('Image Selected');
                                       } else {
@@ -227,27 +241,36 @@ class AdminAddPetState extends State<AdminAddPet> {
 
                                       petViewModel.setLoading(true);
 
-                                      bool success = await petViewModel.submitForm();
+                                      bool success =
+                                          await petViewModel.submitForm();
 
                                       petViewModel.setLoading(false);
 
-                                      if (!mounted) return; // Check if the widget is still mounted
+                                      if (!mounted)
+                                        return; // Check if the widget is still mounted
 
                                       if (success) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(content: Text('Pet added successfully!')),
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Pet added successfully!')),
                                         );
                                         Navigator.pop(context);
                                       } else {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(content: Text('Failed to add pet. Please try again.')),
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Failed to add pet. Please try again.')),
                                         );
                                       }
                                     }
                                   },
                             child: petViewModel.isLoading
                                 ? const CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
                                   )
                                 : const Text('ADD'),
                           ),

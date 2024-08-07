@@ -37,8 +37,7 @@ class AdminPetManagementState extends State<AdminPetManagement> {
                   children: [
                     Text(
                       userEmail,
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(width: 16),
                     const CircleAvatar(
@@ -58,10 +57,7 @@ class AdminPetManagementState extends State<AdminPetManagement> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ToggleButtons(
-                      isSelected: [
-                        viewModel.isNewPetSelected,
-                        !viewModel.isNewPetSelected
-                      ],
+                      isSelected: [viewModel.isNewPetSelected, !viewModel.isNewPetSelected],
                       onPressed: (index) {
                         viewModel.togglePetSelection(index);
                       },
@@ -80,24 +76,17 @@ class AdminPetManagementState extends State<AdminPetManagement> {
                     StreamBuilder<QuerySnapshot>(
                       stream: petsRef.snapshots(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
                         }
 
                         if (snapshot.hasError) {
-                          return const Center(
-                              child: Text('Error fetching data.'));
+                          return const Center(child: Text('Error fetching data.'));
                         }
 
                         final pets = snapshot.data?.docs ?? [];
-                        int totalAdoptionPets = pets
-                            .where((pet) => pet['purpose'] == 'Adoption')
-                            .length;
-                        int totalLostPets = pets
-                            .where((pet) => pet['purpose'] == 'Lost')
-                            .length;
+                        int totalAdoptionPets = pets.where((pet) => pet['purpose'] == 'Adoption').length;
+                        int totalLostPets = pets.where((pet) => pet['purpose'] == 'Lost').length;
 
                         return Material(
                           color: Theme.of(context).cardColor,
@@ -109,9 +98,7 @@ class AdminPetManagementState extends State<AdminPetManagement> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  viewModel.isNewPetSelected
-                                      ? 'Adoption Pets: $totalAdoptionPets'
-                                      : 'Lost Pets: $totalLostPets',
+                                  viewModel.isNewPetSelected ? 'Adoption Pets: $totalAdoptionPets' : 'Lost Pets: $totalLostPets',
                                   style: Theme.of(context).textTheme.titleLarge,
                                 ),
                                 if (totalAdoptionPets + totalLostPets > 0)
@@ -148,8 +135,7 @@ class AdminPetManagementState extends State<AdminPetManagement> {
                                     ),
                                   )
                                 else
-                                  const Text(
-                                      'No data available for the chart.'),
+                                  const Text('No data available for the chart.'),
                               ],
                             ),
                           ),
@@ -164,8 +150,7 @@ class AdminPetManagementState extends State<AdminPetManagement> {
                             final selectedSeller = await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const AdminSelectSellerForPetScreen(),
+                                builder: (context) => const AdminSelectSellerForPetScreen(),
                               ),
                             );
 
@@ -206,15 +191,12 @@ class AdminPetManagementState extends State<AdminPetManagement> {
                       child: StreamBuilder<QuerySnapshot>(
                         stream: petsQuery.snapshots(),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
                           }
 
                           if (snapshot.hasError) {
-                            return const Center(
-                                child: Text('Error fetching data.'));
+                            return const Center(child: Text('Error fetching data.'));
                           }
 
                           final pets = snapshot.data?.docs ?? [];
@@ -229,31 +211,26 @@ class AdminPetManagementState extends State<AdminPetManagement> {
                             itemCount: filteredPets.length,
                             itemBuilder: (context, index) {
                               final pet = filteredPets[index];
-                              final petData = pet.data() as Map<String,
-                                  dynamic>; // Access the data as a map
+                              final petData = pet.data() as Map<String, dynamic>; // Access the data as a map
                               final petName = petData['petName'] ?? 'Unknown';
                               final petFee = petData['fee'] ?? 'Unknown';
-                              final petSpecies =
-                                  petData['species'] ?? 'Unknown';
+                              final petSpecies = petData['species'] ?? 'Unknown';
                               final petId = pet.id;
                               final profileImage = petData['imageUrl'];
                               const double avatarRadius = 30;
 
                               return Card(
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                margin: const EdgeInsets.symmetric(vertical: 8.0),
                                 child: ListTile(
                                   leading: Stack(
                                     children: [
                                       profileImage != null
                                           ? CircleAvatar(
-                                              backgroundImage:
-                                                  NetworkImage(profileImage),
+                                              backgroundImage: NetworkImage(profileImage),
                                               radius: avatarRadius,
                                             )
                                           : const CircleAvatar(
-                                              backgroundImage: AssetImage(
-                                                  'assets/pet_icon.png'),
+                                              backgroundImage: AssetImage('assets/pet_icon.png'),
                                               radius: avatarRadius,
                                             ),
                                       Positioned(
@@ -276,9 +253,9 @@ class AdminPetManagementState extends State<AdminPetManagement> {
                                   ),
                                   title: Text(petName),
                                   subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      
                                       Text('Species: $petSpecies'),
                                       //Text('ID: $petId'),
                                       Text('Fee (RM): $petFee'),
@@ -293,9 +270,7 @@ class AdminPetManagementState extends State<AdminPetManagement> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AdminEditPetScreen(
-                                                      petId: petId),
+                                              builder: (context) => AdminEditPetScreen(petId: petId),
                                             ),
                                           );
                                         },
@@ -303,8 +278,7 @@ class AdminPetManagementState extends State<AdminPetManagement> {
                                       IconButton(
                                         icon: const Icon(Icons.delete),
                                         onPressed: () {
-                                          _showDeleteConfirmationDialog(
-                                              context, viewModel, petId);
+                                          _showDeleteConfirmationDialog(context, viewModel, petId);
                                         },
                                       ),
                                     ],
@@ -326,15 +300,13 @@ class AdminPetManagementState extends State<AdminPetManagement> {
     );
   }
 
-  void _showDeleteConfirmationDialog(
-      BuildContext context, AdminPetViewModel viewModel, String petId) {
+  void _showDeleteConfirmationDialog(BuildContext context, AdminPetViewModel viewModel, String petId) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Delete Pet'),
-          content: const Text(
-              'Are you sure you want to delete this pet? This action cannot be undone.'),
+          content: const Text('Are you sure you want to delete this pet? This action cannot be undone.'),
           actions: [
             TextButton(
               onPressed: () {

@@ -69,7 +69,7 @@ class AdminDashboard extends StatelessWidget {
                 final totalUsers = data['Adopters']! + data['Sellers']!;
 
                 return DashboardCard(
-                  title: 'Total Users:$totalUsers',
+                  title: 'Total Users: $totalUsers',
                   //data: 'Total: ',
                   chart: Column(
                     children: [
@@ -160,7 +160,7 @@ class AdminDashboard extends StatelessWidget {
                 final totalPets = data['Adoption']! + data['Lost']!;
 
                 return DashboardCard(
-                  title: 'Total Pets:$totalPets',
+                  title: 'Total Pets: $totalPets',
                   //data: 'Total: ',
                   chart: Column(
                     children: [
@@ -229,6 +229,7 @@ class AdminDashboard extends StatelessWidget {
                 );
               },
             ),
+            
             StreamBuilder<int>(
               stream: adminDashboardViewModel.getTotalAppointments(),
               builder: (context, snapshot) {
@@ -246,9 +247,10 @@ class AdminDashboard extends StatelessWidget {
                     chart: Icon(Icons.error, color: Colors.red),
                   );
                 }
+                final totalAppointments = snapshot.data ?? 0;
                 return DashboardCard(
-                  title: 'Total Appointments:',
-                  data: snapshot.data.toString(),
+                  title: 'Total Appointments: $totalAppointments',
+                  data: '',
                   chart: BarChart(
                     BarChartData(
                       alignment: BarChartAlignment.center,
@@ -275,7 +277,7 @@ class AdminDashboard extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const DashboardCard(
-                    title: 'Total Feedbacks:',
+                    title: 'Total Feedbacks: ',
                     data: 'Loading...',
                     chart: CircularProgressIndicator(),
                   );
@@ -287,9 +289,10 @@ class AdminDashboard extends StatelessWidget {
                     chart: Icon(Icons.error, color: Colors.red),
                   );
                 }
+                final totalFeedbacks = snapshot.data ?? 0;
                 return DashboardCard(
-                  title: 'Total Feedbacks:',
-                  data: snapshot.data.toString(),
+                  title: 'Total Feedbacks: $totalFeedbacks',
+                  data: '',
                   chart: PieChart(
                     PieChartData(
                       sections: [

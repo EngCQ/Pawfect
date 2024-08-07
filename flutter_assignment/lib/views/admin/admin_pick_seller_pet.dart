@@ -77,6 +77,7 @@ class SelectSellerScreenState extends State<AdminSelectSellerForPetScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFF0583CB),
         title: const Text('Select a seller from the list'),
       ),
       body: Padding(

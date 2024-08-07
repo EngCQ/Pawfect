@@ -86,6 +86,7 @@ class SelectPetForAppoScreenState extends State<AdminSelectPetForAppoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFF0583CB),
         title: const Text('Select a pet from the list'),
       ),
       body: Padding(
